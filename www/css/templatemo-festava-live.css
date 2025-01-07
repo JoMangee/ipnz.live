@@ -548,9 +548,9 @@ strong {
 
 
 /*---------------------------------------
-  TICKET               
+  JOIN US               
 -----------------------------------------*/
-.ticket-section {
+.join-section {
   background-image: url('../images/nicholas-green-unsplash-blur.jpg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -558,19 +558,19 @@ strong {
   padding-top: 130px;
 }
 
-.ticket-form {
+.join-form {
   background: var(--white-color);
   border-radius: var(--border-radius-medium);
   padding: 50px;
 }
 
-.ticket-form .form-check {
+.join-form .form-check {
   position: relative;
   min-height: 52px;
   padding-left: 35px;
 }
 
-.ticket-form .form-check .form-check-label {
+.join-form .form-check .form-check-label {
   display: block;
   position: absolute;
   top: 50%;
@@ -829,7 +829,7 @@ strong {
 
 .site-footer-top {
   background-color: var(--secondary-color);
-  background-image: url('../images/nainoa-shizuru-NcdG9mK3PBY-unsplash.jpg');
+  background-image: url('../images/nainoa-shizuru-unsplash-blur.jpg');
   background-repeat: no-repeat;
   margin-bottom: 70px;
   padding-top: 30px;
@@ -982,11 +982,11 @@ strong {
     padding: 25px;
   }
 
-  .ticket-section {
+  .join-section {
     padding-top: 130px;
   }
 
-  .ticket-form {
+  .join-form {
     padding: 30px;
   }
 }
