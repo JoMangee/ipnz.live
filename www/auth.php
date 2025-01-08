@@ -1,3 +1,6 @@
+<?php 
+    ini_set("include_path", '/home2/ipnz/php:' . ini_get("include_path") );
+?>
 <!doctype html>
 <html lang="en">
 
