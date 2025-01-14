@@ -584,26 +584,26 @@ strong {
 
 
 /*---------------------------------------
-  ARTISTS              
+  avatars              
 -----------------------------------------*/
-.artists-thumb {
+.avatars-thumb {
   position: relative;
   overflow: hidden;
   margin-bottom: 30px;
 }
 
-.artists-image {
+.avatars-image {
   border-radius: var(--border-radius-medium);
   display: block;
   width: 100%;
 }
 
-.artists-thumb:hover .artists-hover {
+.avatars-thumb:hover .avatars-hover {
   transform: translateY(0);
   opacity: 1;
 }
 
-.artists-hover {
+.avatars-hover {
   background-color: var(--primary-color);
   background-color: rgba(248, 203, 46, 0.75);
   border-radius: var(--border-radius-medium);
@@ -620,22 +620,22 @@ strong {
   opacity: 0;
 }
 
-.artists-hover p strong {
+.avatars-hover p strong {
   color: var(--white-color);
   display: inline-block;
   min-width: 180px;
   margin-right: 20px;
 }
 
-.artists-hover p a {
+.avatars-hover p a {
   color: var(--secondary-color);
 }
 
-.artists-hover p a:hover {
+.avatars-hover p a:hover {
   color: var(--white-color);
 }
 
-.artists-hover hr {
+.avatars-hover hr {
   margin: 1.5rem 0;
 }
 
@@ -694,15 +694,15 @@ strong {
 }
 
 .schedule-table .pop-background-image {
-  background-image: url('../images/artists/joecalih-UmTZqmMvQcw-unsplash.jpg');
+  background-image: url('../images/avatars/joecalih-UmTZqmMvQcw-unsplash.jpg');
 }
 
 .schedule-table .rock-background-image {
-  background-image: url('../images/artists/abstral-official-bdlMO9z5yco-unsplash.jpg');
+  background-image: url('../images/avatars/abstral-official-bdlMO9z5yco-unsplash.jpg');
 }
 
 .schedule-table .country-background-image {
-  background-image: url('../images/artists/soundtrap-rAT6FJ6wltE-unsplash.jpg');
+  background-image: url('../images/avatars/soundtrap-rAT6FJ6wltE-unsplash.jpg');
 }
 
 .table-background-image-wrap {
