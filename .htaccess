@@ -1,4 +1,5 @@
 # Disable loading of google fonts and other external font sources
+# via https://chiroiu.com/blog/completely-block-google-fonts-via-htaccess/
 <IfModule mod_headers.c>
 Header add Content-Security-Policy "font-src 'self';"
 Header add X-Content-Security-Policy "font-src 'self';"
