@@ -105,14 +105,6 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link click-scroll" href="index.html#section_4">Schedule</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link click-scroll" href="index.html#section_5">Pricing</a>
-                        </li>
-
-                        <li class="nav-item">
                             <a class="nav-link click-scroll" href="index.html#section_6">Contact</a>
                         </li>
                     </ul>
@@ -131,7 +123,7 @@
 
                     <div class="col-lg-6 col-10 mx-auto">
                         <form class="custom-form join-form mb-5 mb-lg-0" action="#" method="post" role="form">
-                            <h2 class="text-center mb-4">Get started here</h2>
+                            <h2 class="text-center mb-4">Thanks for Joining</h2>
 
                             <div class="join-form-body">
                                 <div class="row">

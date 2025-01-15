@@ -3,3 +3,4 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home2/ipnz/IPnz.live
     - /bin/cp -R www $DEPLOYPATH
+    - /bin/chmod u+x $DEPLOYPATH/auth.php
