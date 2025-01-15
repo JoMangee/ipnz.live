@@ -1,0 +1,6 @@
+# Disable loading of google fonts and other external font sources
+<IfModule mod_headers.c>
+Header add Content-Security-Policy "font-src 'self';"
+Header add X-Content-Security-Policy "font-src 'self';"
+Header add X-Webkit-CSP "font-src 'self';"
+</IfModule>

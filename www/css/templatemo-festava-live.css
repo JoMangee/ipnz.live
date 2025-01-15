@@ -584,7 +584,7 @@ strong {
 
 
 /*---------------------------------------
-  avatars              
+  AVATARS          
 -----------------------------------------*/
 .avatars-thumb {
   position: relative;
@@ -595,7 +595,7 @@ strong {
 .avatars-image {
   border-radius: var(--border-radius-medium);
   display: block;
-  width: 100%;
+  object-fit: cover; /* readyplayerme avatars are square - so need to crop slightly to fit */
 }
 
 .avatars-thumb:hover .avatars-hover {
