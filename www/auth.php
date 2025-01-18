@@ -67,7 +67,7 @@
 <body>
 
     <main>
-        <!-- print_r($array);
+        <!-- <?php print_r($array); ?> -->
 
         <header class="site-header">
             <div class="container">
