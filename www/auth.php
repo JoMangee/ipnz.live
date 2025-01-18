@@ -4,8 +4,10 @@
 
     // define variables and set to empty values
     $name = $email = $memtype1 = $memtype2 = $phone = $comment = "";
+    $formpost = array();
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        formpost = $_POST;
         $name = test_input($_POST["join-form-name"]);
         $email = test_input($_POST["join-form-email"]);
         $phone = test_input($_POST["join-form-phone"]);
@@ -65,6 +67,7 @@
 <body>
 
     <main>
+        <!-- print_r($array);
 
         <header class="site-header">
             <div class="container">
