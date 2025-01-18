@@ -7,7 +7,7 @@
     $formpost = array();
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        formpost = $_POST;
+        $formpost = $_POST;
         $name = test_input($_POST["join-form-name"]);
         $email = test_input($_POST["join-form-email"]);
         $phone = test_input($_POST["join-form-phone"]);
