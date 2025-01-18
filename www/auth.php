@@ -1,5 +1,27 @@
 <?php 
     ini_set("include_path", '/home2/ipnz/php:' . ini_get("include_path") );
+
+
+    // define variables and set to empty values
+    $name = $email = $memtype1 = $memtype2 = $phone = $comment = "";
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $name = test_input($_POST["join-form-name"]);
+        $email = test_input($_POST["join-form-email"]);
+        $phone = test_input($_POST["join-form-phone"]);
+        $memtype1 = test_input($_POST["flexRadioDefault1"]);
+        $memtype2 = test_input($_POST["flexRadioDefault2"]);
+        $comment = test_input($_POST["comment"]);
+    }
+
+    function test_input($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
+
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -129,18 +151,17 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <input type="text" name="join-form-name" id="join-form-name"
-                                            class="form-control" placeholder="Full name" required>
+                                            class="form-control" placeholder="<?php echo $name; ?>" disabled>
                                     </div>
 
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <input type="email" name="join-form-email" id="join-form-email"
-                                            pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email address"
-                                            required>
+                                             class="form-control" placeholder="<?php echo $email; ?>" disabled>                                 
                                     </div>
                                 </div>
 
                                 <input type="tel" class="form-control" name="join-form-phone"
-                                    placeholder="Ph 085-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required="">
+                                    placeholder="<?php echo $phone; ?>" disabled>
 
                                 <h6>Choose join Type</h6>
 
@@ -150,7 +171,7 @@
                                             <input class="form-check-input" type="radio" name="joinForm"
                                                 id="flexRadioDefault1">
                                             <label class="form-check-label" for="flexRadioDefault1">
-                                                Eary bird $120
+                                                <?php echo $memtype1; ?>
                                             </label>
                                         </div>
                                     </div>
@@ -160,20 +181,17 @@
                                             <input class="form-check-input" type="radio" name="joinForm"
                                                 id="flexRadioDefault2">
                                             <label class="form-check-label" for="flexRadioDefault2">
-                                                Standard $240
+                                                <?php echo $memtype2; ?>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
 
-                                <input type="number" name="join-form-number" id="join-form-number"
-                                    class="form-control" placeholder="Number of joins" required>
-
                                 <textarea name="join-form-message" rows="3" class="form-control"
-                                    id="join-form-message" placeholder="Additional Request"></textarea>
+                                    id="join-form-message" placeholder="<?php echo $comment; ?>" disabled></textarea>
 
                                 <div class="col-lg-4 col-md-10 col-8 mx-auto">
-                                    <button type="submit" class="form-control">Buy join</button>
+                                    <button type="submit" class="form-control">Confirm Correct</button>
                                 </div>
                             </div>
                         </form>
