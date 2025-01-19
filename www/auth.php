@@ -171,9 +171,9 @@
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="form-check form-control">
                                             <input class="form-check-input" type="radio" name="joinForm"
-                                                id="flexRadioDefault1">
+                                                id="flexRadioDefault1" <?php if ($memtype1 == "Early access"){ echo "checked";} ?> disabled>
                                             <label class="form-check-label" for="flexRadioDefault1">
-                                                <?php echo $memtype1; ?>
+                                                Early access
                                             </label>
                                         </div>
                                     </div>
@@ -181,9 +181,9 @@
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="form-check form-check-radio form-control">
                                             <input class="form-check-input" type="radio" name="joinForm"
-                                                id="flexRadioDefault2">
+                                                id="flexRadioDefault2" <?php if ($memtype1 == "Standard"){ echo "checked";} ?> disabled>
                                             <label class="form-check-label" for="flexRadioDefault2">
-                                                <?php echo $memtype2; ?>
+                                                Standard
                                             </label>
                                         </div>
                                     </div>
