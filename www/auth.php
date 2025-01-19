@@ -13,7 +13,7 @@
         $phone = test_input($_POST["join-form-phone"]);
         $memtype1 = test_input($_POST["joinForm"]);
         $memtype2 = test_input($_POST["joinForm"]);
-        $comment = test_input($_POST["comment"]);
+        $comment = test_input($_POST["join-form-message"]);
     }
 
     function test_input($data) {
