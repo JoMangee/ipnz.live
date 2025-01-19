@@ -190,7 +190,7 @@
                                 </div>
 
                                 <textarea name="join-form-message" rows="3" class="form-control"
-                                    id="join-form-message" placeholder="<?php echo $comment; ?>" disabled></textarea>
+                                    id="join-form-message" placeholder="<?php echo $comment; ?>" disabled><?php echo $comment; ?></textarea>
 
                                 <div class="col-lg-4 col-md-10 col-8 mx-auto">
                                     <button type="submit" class="form-control">Confirm Correct</button>
