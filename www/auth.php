@@ -11,8 +11,8 @@
         $name = test_input($_POST["join-form-name"]);
         $email = test_input($_POST["join-form-email"]);
         $phone = test_input($_POST["join-form-phone"]);
-        $memtype1 = test_input($_POST["flexRadioDefault1"]);
-        $memtype2 = test_input($_POST["flexRadioDefault2"]);
+        $memtype1 = test_input($_POST["joinForm"]);
+        $memtype2 = test_input($_POST["joinForm"]);
         $comment = test_input($_POST["comment"]);
     }
 
