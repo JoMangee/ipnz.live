@@ -67,7 +67,7 @@
 <body>
 
     <main>
-        <!-- <?php print_r($array); ?> -->
+        <!-- <?php print_r($formpost); ?> -->
 
         <header class="site-header">
             <div class="container">
@@ -138,7 +138,6 @@
                 </div>
             </div>
         </nav>
-
 
         <section class="join-section section-padding">
             <div class="section-overlay"></div>
