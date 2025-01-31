@@ -146,7 +146,7 @@
 
                     <div class="col-lg-6 col-10 mx-auto">
                         <form class="custom-form join-form mb-5 mb-lg-0" action="auth.php?confirm" method="post" role="form">
-                            <h2 class="text-center mb-4">Thanks for Joining</h2>
+                            <h2 class="text-center mb-4">Thanks for requesting to Join us</h2>
 
                             <div class="join-form-body">
                                 <div class="row">
@@ -193,6 +193,7 @@
 
                                 <div class="col-lg-4 col-md-10 col-8 mx-auto">
                                     <button type="submit" class="form-control">Confirm Correct</button>
+                                    <button type="submit" class="form-control">Cancel Join</button>
                                 </div>
                             </div>
                         </form>
