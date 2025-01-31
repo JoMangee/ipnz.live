@@ -19,6 +19,9 @@ Header add X-Webkit-CSP "font-src 'self';"
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME}.html -f
     RewriteRule ^(.*)$ $1.html
-    RewriteRule ^([a-z]+)\/?$ $1.html [NC] 
-    
+    RewriteRule ^([a-z]+)\/?$ $1.html [NC]   
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ /index.html?path=$1 [NC,L,QSA]
  </IfModule>
