@@ -11,8 +11,7 @@
         $name = test_input($_POST["join-form-name"]);
         $email = test_input($_POST["join-form-email"]);
         $phone = test_input($_POST["join-form-phone"]);
-        $memtype1 = test_input($_POST["joinForm"]);
-        $memtype2 = test_input($_POST["joinForm"]);
+        $memtype = test_input($_POST["joinForm"]);
         $comment = test_input($_POST["join-form-message"]);
     }
 
@@ -146,7 +145,7 @@
                 <div class="row">
 
                     <div class="col-lg-6 col-10 mx-auto">
-                        <form class="custom-form join-form mb-5 mb-lg-0" action="#" method="post" role="form">
+                        <form class="custom-form join-form mb-5 mb-lg-0" action="auth.php?confirm" method="post" role="form">
                             <h2 class="text-center mb-4">Thanks for Joining</h2>
 
                             <div class="join-form-body">
@@ -171,7 +170,7 @@
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="form-check form-control">
                                             <input class="form-check-input" type="radio" name="joinForm"
-                                                id="flexRadioDefault1" <?php if ($memtype1 == "Early access"){ echo "checked";} ?> disabled>
+                                                id="flexRadioDefault1" <?php if ($memtype == "Early access"){ echo "checked";} ?> disabled>
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Early access
                                             </label>
@@ -181,7 +180,7 @@
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="form-check form-check-radio form-control">
                                             <input class="form-check-input" type="radio" name="joinForm"
-                                                id="flexRadioDefault2" <?php if ($memtype1 == "Standard"){ echo "checked";} ?> disabled>
+                                                id="flexRadioDefault2" <?php if ($memtype == "Standard"){ echo "checked";} ?> disabled>
                                             <label class="form-check-label" for="flexRadioDefault2">
                                                 Standard
                                             </label>
