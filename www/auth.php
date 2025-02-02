@@ -1,28 +1,150 @@
 <?php 
     ini_set("include_path", '/home2/ipnz/php:' . ini_get("include_path") );
+    require_once __DIR__ . '/../repositories/php-dotenv/src/DotEnv.php'
+    (new DotEnv(__DIR__ . '/.env'))->load();
 
-
+    if (getenv('APP_ENV')=="authdev") {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+    }elseif (getenv('APP_ENV')== 'live') {
+        error_reporting(0);
+        ini_set('display_errors', 0);
+    }
+    // authdev
     // define variables and set to empty values
     $name = $email = $memtype1 = $memtype2 = $phone = $comment = "";
     $formpost = array();
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $formpost = $_POST;
-        $name = test_input($_POST["join-form-name"]);
-        $email = test_input($_POST["join-form-email"]);
-        $phone = test_input($_POST["join-form-phone"]);
-        $memtype = test_input($_POST["joinForm"]);
-        $comment = test_input($_POST["join-form-message"]);
+    // Database connection details
+    $dbservername = getenv('DATABASE_DNS');
+    $dbusername = getenv('DATABASE_USER');
+    $dbpassword = getenv('DATABASE_PASSWORD');
+    $dbname = getenv('DATABASE_NAME');
+
+    // Create connection
+    $conn = new mysqli($dbservername, $dbusername, $dbpassword, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
     }
 
-    function test_input($data) {
+    // Function to sanitize inputs
+    function sanitize_input($data) {
         $data = trim($data);
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
         return $data;
     }
 
+    // Check if form is submitted
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Sanitize input
+        $name = sanitize_input($_POST['name'] ?? '');
+        $email = sanitize_input($_POST['email'] ?? '');
 
+        // Handle file upload
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+        // Check if image file is a actual image or fake image
+        if(isset($_POST["submit"])) {
+            $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+            if($check !== false) {
+                $uploadOk = 1;
+            } else {
+                echo "File is not an image.";
+                $uploadOk = 0;
+            }
+        }
+
+        // Check file size
+        if ($_FILES["fileToUpload"]["size"] > 500000) {
+            echo "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+
+        // Allow certain file formats
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif" ) {
+            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $uploadOk = 0;
+        }
+
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+        // if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }
+        }
+
+        // SQL to create table if not exists
+        $sql = "CREATE TABLE IF NOT EXISTS members (
+            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(30) NOT NULL,
+            email VARCHAR(100) NOT NULL,
+            phone VARCHAR(12),
+            memtype VARCHAR(30),
+            status VARCHAR(30),
+            comment TEXT,
+            avatar_id VARCHAR(128),
+            image VARCHAR(255)
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        )";
+
+        if ($conn->query($sql) === TRUE) {
+            echo "Table users created successfully or already exists.";
+        } else {
+            echo "Error creating table: " . $conn->error;
+        }
+
+        // Insert data into the table
+        $stmt = $conn->prepare("INSERT INTO members (name, email, phone, memtype, comment) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sss", $name, $email, $target_file);
+
+        if ($stmt->execute()) {
+            echo "New record created successfully";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+
+        $stmt->close();
+    }
+
+    $conn->close();
+
+
+
+// the original code:
+
+ 
+     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // define variables and set to empty values
+        $name = $email = $memtype1 = $memtype2 = $phone = $comment = "";
+        $formpost = array();
+
+         $formpost = $_POST;
+         $name = test_input($_POST["join-form-name"]);
+         $email = test_input($_POST["join-form-email"]);
+         $phone = test_input($_POST["join-form-phone"]);
+         $memtype = test_input($_POST["joinForm"]);
+         $comment = test_input($_POST["join-form-message"]);
+     }
+ 
+     function test_input($data) {
+         $data = trim($data);
+         $data = stripslashes($data);
+         $data = htmlspecialchars($data);
+         return $data;
+     }
 ?>
 <!doctype html>
 <html lang="en">
@@ -195,6 +317,8 @@
                                     <button type="submit" class="form-control">Confirm Correct</button>
                                     <button type="submit" class="form-control">Cancel Join</button>
                                 </div>
+
+                                <input type="file" name="fileToUpload" id="fileToUpload" ><br>
                             </div>
                         </form>
                     </div>
