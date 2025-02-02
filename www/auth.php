@@ -2,7 +2,7 @@
     ini_set("include_path", '/home2/ipnz/php:' . ini_get("include_path") );
     require_once '/home2/ipnz/repositories/php-dotenv/src/DotEnv.php';
     use PhpDevCommunity\DotEnv;
-    $absolutePathToEnvFile = __DIR__ . '/.env'; 
+    $absolutePathToEnvFile = __DIR__ . '/../.env'; 
     (new DotEnv($absolutePathToEnvFile))->load();
 
     if (getenv('APP_ENV')=="authdev") {
