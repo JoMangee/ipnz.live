@@ -1,6 +1,6 @@
 <?php 
     ini_set("include_path", '/home2/ipnz/php:' . ini_get("include_path") );
-    require_once __DIR__ . '/../repositories/php-dotenv/src/DotEnv.php'
+    require_once __DIR__ . '/home2/ipnz/repositories/php-dotenv/src/DotEnv.php'
     (new DotEnv(__DIR__ . '/.env'))->load();
 
     if (getenv('APP_ENV')=="authdev") {
