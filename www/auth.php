@@ -1,6 +1,5 @@
 <?php 
     ini_set("include_path", '/home2/ipnz/php:' . ini_get("include_path") );
-    require_once '/home2/ipnz/repositories/php-dotenv/src/DotEnv.php';
     use PhpDevCommunity\DotEnv;
     $absolutePathToEnvFile = '/home2/ipnz/ipnz-live/.env'; 
     (new DotEnv($absolutePathToEnvFile))->load();
