@@ -36,13 +36,8 @@ deployment:
     - touch $DEPLOYPATH/join.php
     - touch $DEPLOYPATH/auth.php
     
-    # Log deployment completion
-    - echo "========================================="
-    - echo "STAGING deployment completed!"
-    - echo "Site: https://auth-dev.ipnz.live"
-    - echo "Time: $(date)"
-    - echo "========================================="
-    - echo "NOTE: Staging uses TEST database - verify config!"
+    # Deployment complete
+    - echo "STAGING deployment completed to auth-dev.ipnz.live"
 
   # Optional: Database Import for Staging (uncomment to enable)
   # Use this ONLY for initial setup or when resetting staging database
