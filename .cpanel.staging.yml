@@ -48,3 +48,36 @@ deployment:
     - echo "Time: $(date)"
     - echo "========================================="
     - echo "NOTE: Staging uses TEST database - verify config!"
+
+  # Optional: Database Import for Staging (uncomment to enable)
+  # Use this ONLY for initial setup or when resetting staging database
+  database_import:
+    - name: Import SQL Database for Staging
+      description: Upload and import the schema into the staging database (ipnz_live_test)
+      steps:
+        - name: Upload SQL Schema File
+          action: upload
+          source: ipnz_db_improved.sql
+          destination: /home2/ipnz/ipnz-live/ipnz_db_improved.sql
+
+        - name: Create MySQL Staging Database
+          action: execute
+          command: |
+            mysql -u ipnz_live_test -p'${DATABASE_PASSWORD}' -e "CREATE DATABASE IF NOT EXISTS ipnz_live_test;"
+            echo "Staging database 'ipnz_live_test' created or verified"
+
+        - name: Import SQL Schema to Staging
+          action: execute
+          command: |
+            mysql -u ipnz_live_test -p'${DATABASE_PASSWORD}' ipnz_live_test < /home2/ipnz/ipnz-live/ipnz_db_improved.sql
+            echo "Schema imported to staging database"
+
+        - name: Clean Up SQL File
+          action: delete
+          target: /home2/ipnz/ipnz-live/ipnz_db_improved.sql
+          
+        - name: Verify Import
+          action: execute
+          command: |
+            mysql -u ipnz_live_test -p'${DATABASE_PASSWORD}' ipnz_live_test -e "SHOW TABLES;"
+            echo "Database import completed for STAGING environment"
