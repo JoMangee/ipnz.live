@@ -1,3 +1,21 @@
+# IPnz.live - Git Ignore Rules
+
+# ===== SECURITY: DO NOT COMMIT =====
+# Database dumps with real user data
+ipnz_db.sql
+*_backup.sql
+*.sql.gz
+**/dump*.sql
+**/backup*.sql
+
+# Database credentials
+config.ini.php
+database.config.php
+.env
+.env.local
+*.env
+
+# ===== Archives & Distribution Files =====
 www/FestavaLive-1.0.0.zip
 www/ipnz.live-stream.pdf
 ipnz.live.code-workspace

@@ -166,7 +166,7 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="form-check form-control">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault1"
+                                            <input class="form-check-input" type="radio" name="join-type"
                                                 id="flexRadioDefault1" checked="checked" value="0">
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Early access
@@ -176,8 +176,8 @@
 
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="form-check form-check-radio form-control">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault2"
-                                                id="flexRadioDefault2"  value="1">
+                                            <input class="form-check-input" type="radio" name="join-type"
+                                                id="flexRadioDefault2" value="1">
                                             <label class="form-check-label" for="flexRadioDefault2">
                                                 Standard
                                             </label>

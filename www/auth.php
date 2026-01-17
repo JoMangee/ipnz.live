@@ -122,58 +122,65 @@
                 <div class="row">
 
                     <div class="col-lg-6 col-10 mx-auto">
-                        <form class="custom-form join-form mb-5 mb-lg-0" action="#" method="post" role="form">
-                            <h2 class="text-center mb-4">Thanks for Joining</h2>
+                        <?php
+                        // Handle contact form submission
+                        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['contact']) && $_GET['contact'] === 'true') {
+                            require('datacenter/database.php');
+                            
+                            $name = trim($_POST['contact-name'] ?? '');
+                            $email = trim($_POST['contact-email'] ?? '');
+                            $company = trim($_POST['contact-company'] ?? '');
+                            $message = trim($_POST['contact-message'] ?? '');
+                            
+                            // Validate email
+                            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                echo '<div class="alert alert-danger" style="margin:20px 0;">Invalid email address.</div>';
+                            } else {
+                                // Store contact message (you may want to create a contacts table)
+                                // For now, create a record with status = 1 to distinguish from members
+                                $stmt = $connection->prepare("INSERT INTO ipnz_members (name, email, phone, additional_request, status) VALUES (?, ?, ?, ?, 1)");
+                                $stmt->bind_param("ssss", $name, $email, $company, $message);
+                                
+                                if ($stmt->execute()) {
+                                    echo '<div class="alert alert-success" style="background-color: #4CAF50; color:white; margin:20px 0; text-align:center;">Thank you for your message! We\'ll be in touch soon.</div>';
+                                } else {
+                                    echo '<div class="alert alert-danger" style="margin:20px 0;">Sorry, there was an error. Please try again.</div>';
+                                }
+                                $stmt->close();
+                            }
+                        }
+                        ?>
+                        <form class="custom-form join-form mb-5 mb-lg-0" action="auth.php?contact=true" method="post" role="form">
+                            <h2 class="text-center mb-4">Thank You!</h2>
 
                             <div class="join-form-body">
+                                <p class="text-center mb-4">Your registration was successful! Want to get in touch?</p>
+                                
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-12">
-                                        <input type="text" name="join-form-name" id="join-form-name"
-                                            class="form-control" placeholder="Full name" required>
+                                        <input type="text" name="contact-name" id="contact-name"
+                                            class="form-control" placeholder="Your name" required>
                                     </div>
 
                                     <div class="col-lg-6 col-md-6 col-12">
-                                        <input type="email" name="join-form-email" id="join-form-email"
+                                        <input type="email" name="contact-email" id="contact-email"
                                             pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email address"
                                             required>
                                     </div>
                                 </div>
 
-                                <input type="tel" class="form-control" name="join-form-phone"
-                                    placeholder="Ph 085-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required="">
+                                <input type="text" class="form-control" name="contact-company"
+                                    placeholder="Company or Affiliation">
 
-                                <h6>Choose join Type</h6>
-
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-12">
-                                        <div class="form-check form-control">
-                                            <input class="form-check-input" type="radio" name="joinForm"
-                                                id="flexRadioDefault1">
-                                            <label class="form-check-label" for="flexRadioDefault1">
-                                                Eary bird $120
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 col-md-6 col-12">
-                                        <div class="form-check form-check-radio form-control">
-                                            <input class="form-check-input" type="radio" name="joinForm"
-                                                id="flexRadioDefault2">
-                                            <label class="form-check-label" for="flexRadioDefault2">
-                                                Standard $240
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <input type="number" name="join-form-number" id="join-form-number"
-                                    class="form-control" placeholder="Number of joins" required>
-
-                                <textarea name="join-form-message" rows="3" class="form-control"
-                                    id="join-form-message" placeholder="Additional Request"></textarea>
+                                <textarea name="contact-message" rows="4" class="form-control"
+                                    id="contact-message" placeholder="Your message to us" required></textarea>
 
                                 <div class="col-lg-4 col-md-10 col-8 mx-auto">
-                                    <button type="submit" class="form-control">Buy join</button>
+                                    <button type="submit" class="form-control">Send Message</button>
+                                </div>
+                                
+                                <div class="text-center mt-4">
+                                    <a href="./" class="btn btn-outline-light">Return to Home</a>
                                 </div>
                             </div>
                         </form>
