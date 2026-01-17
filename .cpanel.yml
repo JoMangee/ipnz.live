@@ -16,11 +16,6 @@ deployment:
     
     # Create avatars directory if it doesn't exist
     - mkdir -p $DEPLOYPATH/images/avatars
-    - /bin/chmod 755 $DEPLOYPATH/images/avatars
-    
-    # Set proper permissions for PHP files (readable, not executable)
-    - find $DEPLOYPATH -type f -name "*.php" -exec /bin/chmod 644 {} \;
-    - find $DEPLOYPATH -type d -exec /bin/chmod 755 {} \;
     
     # Preserve existing database config, don't overwrite
     - |
