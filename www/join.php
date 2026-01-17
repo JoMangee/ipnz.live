@@ -1,6 +1,3 @@
-<?php 
-    ini_set("include_path", '/home2/ipnz/php:' . ini_get("include_path") );
-?>
 <!doctype html>
 <html lang="en">
 
@@ -11,13 +8,32 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>IPnz.live - auth</title>
+    <title>IPnz.live - join</title>
 
     <!-- CSS FILES -->
     <link href="css/google-fonts.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-icons.css" rel="stylesheet">
     <link href="css/templatemo-festava-live.css" rel="stylesheet">
+        <style>
+        .frame {
+            width: 100%;
+            height: 800px;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+                Droid Sans, Helvetica Neue, sans-serif;
+            padding: 20px;
+            font-size: 14px;
+            border: none;
+        }
+
+        .warning {
+            background-color: #df68a2;
+            padding: 3px;
+            border-radius: 5px;
+            color: white;
+        }
+    </style>
     <!-- Matomo -->
     <script>
         var _paq = window._paq = window._paq || [];
@@ -34,7 +50,7 @@
       </script>
       <noscript>
         <!-- Matomo Image Tracker-->
-            <img referrerpolicy="no-referrer-when-downgrade" src="https://a.ipnz.live/matomo.php?idsite=6&amp;rec=1&amp;action_name=IPnz.live-auth" style="border:0" alt="" />
+            <img referrerpolicy="no-referrer-when-downgrade" src="https://a.ipnz.live/matomo.php?idsite=6&amp;rec=1&amp;action_name=IPnz.live-join" style="border:0" alt="" />
         <!-- End Matomo -->
         </noscript>
      <!-- End Matomo Code -->
@@ -51,31 +67,14 @@
                     <div class="col-lg-12 col-12 d-flex flex-wrap">
                         <p class="d-flex me-4 mb-0">
                             <i class="bi-person custom-icon me-2"></i>
-                            <strong class="text-dark">Auth to IPnz.live 2025</strong>
+                            <strong class="text-dark">Welcome to IPnz.live 2025</strong>
                         </p>
                     </div>
 
                 </div>
             </div>
         </header>
-        <script>
-            window.fbAsyncInit = function() {
-              FB.init({
-                appId      : '1110554260864808',
-                xfbml      : true,
-                version    : 'v21.0'
-              });
-              FB.AppEvents.logPageView();
-            };
-          
-            (function(d, s, id){
-               var js, fjs = d.getElementsByTagName(s)[0];
-               if (d.getElementById(id)) {return;}
-               js = d.createElement(s); js.id = id;
-               js.src = "https://connect.facebook.net/en_US/sdk.js";
-               fjs.parentNode.insertBefore(js, fjs);
-             }(document, 'script', 'facebook-jssdk'));
-          </script>
+
 
         <nav class="navbar navbar-expand-lg">
             <div class="container">
@@ -105,6 +104,14 @@
                         </li>
 
                         <li class="nav-item">
+                            <a class="nav-link click-scroll" href="./#section_4">Schedule</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link click-scroll" href="./#section_5">Pricing</a>
+                        </li>
+
+                        <li class="nav-item">
                             <a class="nav-link click-scroll" href="./#section_6">Contact</a>
                         </li>
                     </ul>
@@ -121,15 +128,17 @@
             <div class="container">
                 <div class="row">
 
-                    <div class="col-lg-6 col-10 mx-auto">
-                        <form class="custom-form join-form mb-5 mb-lg-0" action="#" method="post" role="form">
-                            <h2 class="text-center mb-4">Thanks for Joining</h2>
-
+                    <div class="col-lg-10 col-10 mx-auto">
+                        <form id="form" class="custom-form join-form mb-5 mb-lg-0" action="" method="post" role="form">
+                            <h2 class="text-center mb-4">Get started here</h2>
+                            <?php
+                            require('datacenter/clientregistration.php');
+                            ?>
                             <div class="join-form-body">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <input type="text" name="join-form-name" id="join-form-name"
-                                            class="form-control" placeholder="Full name" required>
+                                            class="form-control" placeholder="Name" required>
                                     </div>
 
                                     <div class="col-lg-6 col-md-6 col-12">
@@ -137,52 +146,120 @@
                                             pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email address"
                                             required>
                                     </div>
+                                    <!-- <div class="col-lg-6 col-md-6 col-12">
+                                        <input type="text" name="join-form-avatar" id="join-form-avatar"
+                                            class="form-control" placeholder="Avatar Url" required>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-12">
+                
+                                            
+                                            <button type="button" class="btn btn-primary"><a href="avatar">Create Your Avatar Here</a></button>
+                                    </div> -->
                                 </div>
 
                                 <input type="tel" class="form-control" name="join-form-phone"
-                                    placeholder="Ph 085-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required="">
+                                    placeholder="Ph 028255788 or 028-25578835 or 028-2557-8835" 
+                                    pattern="(\d{3}[- ]?\d{3,4}[- ]?\d{4}|\d{3}[- ]?\d{6})" required>
 
                                 <h6>Choose join Type</h6>
 
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="form-check form-control">
-                                            <input class="form-check-input" type="radio" name="joinForm"
-                                                id="flexRadioDefault1">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault1"
+                                                id="flexRadioDefault1" checked="checked" value="0">
                                             <label class="form-check-label" for="flexRadioDefault1">
-                                                Eary bird $120
+                                                Early access
                                             </label>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="form-check form-check-radio form-control">
-                                            <input class="form-check-input" type="radio" name="joinForm"
-                                                id="flexRadioDefault2">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault2"
+                                                id="flexRadioDefault2"  value="1">
                                             <label class="form-check-label" for="flexRadioDefault2">
-                                                Standard $240
+                                                Standard
                                             </label>
                                         </div>
                                     </div>
                                 </div>
 
-                                <input type="number" name="join-form-number" id="join-form-number"
-                                    class="form-control" placeholder="Number of joins" required>
-
                                 <textarea name="join-form-message" rows="3" class="form-control"
                                     id="join-form-message" placeholder="Additional Request"></textarea>
+                                <h6>Create Your Avatar</h6>
+                            <input type="button" value="Open Ready Player Me" onClick="displayIframe()" />
+                            <p>Avatar URL:</p> 
+                            <input id="avatarUrl" name="avatarUrl" class="form-control border-0" type="text" readonly/>
 
+
+                            <iframe id="frame" class="frame" allow="camera *; microphone *; clipboard-write" hidden></iframe>
+
+                            <script>
+                                const subdomain = 'ipnz'; // Replace with your custom subdomain
+                                const frame = document.getElementById('frame');
+
+                                frame.src = `https://${subdomain}.readyplayer.me/avatar?frameApi`;
+
+                                window.addEventListener('message', subscribe);
+                                document.addEventListener('message', subscribe);
+
+                                function subscribe(event) {
+                                    const json = parse(event);
+
+                                    if (json?.source !== 'readyplayerme') {
+                                        return;
+                                    }
+
+                                    // Susbribe to all events sent from Ready Player Me once frame is ready
+                                    if (json.eventName === 'v1.frame.ready') {
+                                        frame.contentWindow.postMessage(
+                                            JSON.stringify({
+                                                target: 'readyplayerme',
+                                                type: 'subscribe',
+                                                eventName: 'v1.**'
+                                            }),
+                                            '*'
+                                        );
+                                    }
+
+                                    // Get avatar GLB URL
+                                    if (json.eventName === 'v1.avatar.exported') {
+                                        console.log(`Avatar URL: ${json.data.url}`);
+                                        document.getElementById('avatarUrl').value = `Avatar URL: ${json.data.url}`;
+                                        document.getElementById('frame').hidden = true;
+                                    }
+
+                                    // Get user id
+                                    if (json.eventName === 'v1.user.set') {
+                                        console.log(`User with id ${json.data.id} set: ${JSON.stringify(json)}`);
+                                    }
+                                }
+
+                                function parse(event) {
+                                    try {
+                                        return JSON.parse(event.data);
+                                    } catch (error) {
+                                        return null;
+                                    }
+                                }
+
+                                function displayIframe() {
+                                    document.getElementById('frame').hidden = false;
+                                }
+                            </script>
                                 <div class="col-lg-4 col-md-10 col-8 mx-auto">
-                                    <button type="submit" class="form-control">Buy join</button>
+                                    <button type="submit" name="submit" class="form-control">Join us</button>
                                 </div>
                             </div>
+
                         </form>
                     </div>
                 </div>
         </section>
     </main>
 
-
+</script>
     <footer class="site-footer">
         <div class="site-footer-top">
             <div class="container">
@@ -247,15 +324,6 @@
                         <li class="site-footer-link-item">
                             <a href="#" class="site-footer-link">Members</a>
                         </li>
-
-                        <li class="site-footer-link-item">
-                            <a href="#" class="site-footer-link">Schedule</a>
-                        </li>
-
-                        <li class="site-footer-link-item">
-                            <a href="#" class="site-footer-link">Pricing</a>
-                        </li>
-
                         <li class="site-footer-link-item">
                             <a href="#" class="site-footer-link">Contact</a>
                         </li>
@@ -266,14 +334,14 @@
                     <h5 class="site-footer-title mb-3">Have a question?</h5>
 
                     <p class="text-white d-flex mb-1">
-                        <a href="tel: 090-080-0760" class="site-footer-link">
-                            090-080-0760
+                        <a href="tel: 028-2557-8835" class="site-footer-link">
+                            +642825578835
                         </a>
                     </p>
 
                     <p class="text-white d-flex">
-                        <a href="mailto:hello@company.com" class="site-footer-link">
-                            hello@company.com
+                        <a href="mailto:hello-ops@IPnz.live" class="site-footer-link">
+                            ops+hello@IPnz.live
                         </a>
                     </p>
                 </div>
@@ -282,7 +350,7 @@
                     <h5 class="site-footer-title mb-3">Location</h5>
 
                     <p class="text-white d-flex mt-3 mb-2">
-                        Silang Junction South, Tagaytay, Cavite, Philippines</p>
+                        New Zealand</p>
 
                     <a class="link-fx-1 color-contrast-higher mt-3" href="#">
                         <span>Our Maps</span>

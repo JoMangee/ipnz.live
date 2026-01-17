@@ -1,0 +1,37 @@
+RewriteEngine On
+RewriteCond %{SERVER_PORT} 80
+RewriteCond %{HTTP_HOST} ^(www\.)?ipnz\.live
+RewriteRule ^(.*)$ https://www.ipnz.live/$1 [R,L]
+
+# ensure www.
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ensure remove extension
+RewriteCond %{THE_REQUEST} /([^.]+)\.(html|php|asp) [NC]
+RewriteCond %{REQUEST_FILENAME} !sendmail-contact-us\.php
+RewriteRule ^ /%1 [NC,L,R]
+
+# ensure file extension
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^ %{REQUEST_URI}.php [NC,L]
+
+
+# ensure redirect page
+#Redirect 301 /index https://www.ipnz.live/
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{HTTP_HOST} ^(www\.)$_SERVER['DOCUMENT_ROOT']$
+RewriteRule ^(.*)$ index.php/$ [L] # replace index.php by blank
+RewriteRule    ^avatar?$    avatar.php     [NC,L]
+RewriteRule    ^join?$    join.php     [NC,L]
+RewriteRule    ^auth?$    auth.php     [NC,L]
+
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php80” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php80___lsphp .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
