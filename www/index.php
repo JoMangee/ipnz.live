@@ -261,6 +261,12 @@
                                 jump into it live and <a href="join.html">Link with us</a> now!
                             </p>
 
+                            <div class="mt-4 mb-4">
+                                <a href="join.html" class="btn btn-lg btn-danger rounded-pill px-5 py-3 shadow-lg" style="font-size: 1.5rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
+                                    <i class="bi-person-plus-fill me-2"></i>JOIN US NOW
+                                </a>
+                            </div>
+
                             <h6 class="text-white mt-4">Internet Party People</h6>
 
                             <p class="text-white">Please tell your friends about your hopes and dreams for the Internet, 
