@@ -1,17 +1,17 @@
 ---
 # cPanel Deployment Configuration for IPnz.live
-# PRODUCTION DEPLOYMENT - Main site (ipnz.live → /public_html)
-# For staging deployment, use .cpanel.staging.yml
+# STAGING/DEV DEPLOYMENT - Development site (auth-dev.ipnz.live → /ipnz-live/www)
+# Rename this file to .cpanel.yml for the staging repository
 
 deployment:
   tasks:
-    # Set deployment path for PRODUCTION
-    - export DEPLOYPATH=/home2/ipnz/public_html
+    # Set deployment path for STAGING
+    - export DEPLOYPATH=/home2/ipnz/ipnz-live/www
     - echo "========================================="
-    - echo "PRODUCTION DEPLOYMENT to ipnz.live"
+    - echo "STAGING DEPLOYMENT to auth-dev.ipnz.live"
     - echo "========================================="
     
-    # Deploy www directory contents to public_html
+    # Deploy www directory contents to staging path
     - /bin/cp -R www/* $DEPLOYPATH/
     
     # Create avatars directory if it doesn't exist
@@ -27,8 +27,9 @@ deployment:
       if [ ! -f "$DEPLOYPATH/datacenter/database.config.php" ]; then
         echo "WARNING: database.config.php not found!"
         echo "Please create from database.config.example.php"
+        echo "STAGING should use a separate test database!"
       else
-        echo "Preserving existing database.config.php"
+        echo "Preserving existing STAGING database.config.php"
         /bin/chmod 600 $DEPLOYPATH/datacenter/database.config.php
       fi
     
@@ -42,7 +43,8 @@ deployment:
     
     # Log deployment completion
     - echo "========================================="
-    - echo "PRODUCTION deployment completed!"
-    - echo "Site: https://ipnz.live"
+    - echo "STAGING deployment completed!"
+    - echo "Site: https://auth-dev.ipnz.live"
     - echo "Time: $(date)"
     - echo "========================================="
+    - echo "NOTE: Staging uses TEST database - verify config!"
