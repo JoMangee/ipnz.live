@@ -201,19 +201,19 @@
 
                                 <li class="social-icon-item">
                                     <a href="https://www.facebook.com/dialog/share?app_id=1110554260864808&display=popup&href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2F
-                                    &redirect_uri=https%3A%2F%2Fdevelopers.facebook.com%2Ftools%2Fexplorer" target="_blank" rel="noopener noreferrer" class="social-icon-link">
+                                    &redirect_uri=https%3A%2F%2Fdevelopers.facebook.com%2Ftools%2Fexplorer" target="_blank" rel="noopener" class="social-icon-link">
                                         <span class="bi-facebook"></span>
                                     </a>
                                 </li>
 
                                 <li class="social-icon-item">
-                                    <a href="https://twitter.com/intent/tweet?text=I%27ve%20just%20heard%20about%20the%20%23InternetPartyPeople&related=IPnzTech%3Amaking%20tech%20happen%20for%20IPnz&url=https%3A%2F%2FIPnz.live&via=thegeekjo" target="_blank" rel="noopener noreferrer" class="social-icon-link" data-text="I%27ve%20just%20heard%20about%20the%20%23InternetPartyPeople%20at%20https://IPnz.live" data-url="https://IPnz.live" data-show-count="false">
+                                    <a href="https://twitter.com/intent/tweet?text=I%27ve%20just%20heard%20about%20the%20%23InternetPartyPeople&related=IPnzTech%3Amaking%20tech%20happen%20for%20IPnz&url=https%3A%2F%2FIPnz.live&via=thegeekjo" target="_blank" rel="noopener" class="social-icon-link" data-text="I%27ve%20just%20heard%20about%20the%20%23InternetPartyPeople%20at%20https://IPnz.live" data-url="https://IPnz.live" data-show-count="false">
                                         <span class="bi-twitter"></span>
                                     </a>
                                 </li>
 
                                 <li class="social-icon-item">
-                                    <a href="https://www.instagram.com/p/BVm4iR6gduY/" target="_blank" rel="noopener noreferrer" class="social-icon-link">
+                                    <a href="https://www.instagram.com/p/BVm4iR6gduY/" target="_blank" rel="noopener" class="social-icon-link">
                                         <span class="bi-instagram"></span>
                                     </a>
                                 </li>
@@ -242,11 +242,11 @@
                             <h2 class="text-white mb-4">About IPnz.live</h2>
 
                             <p class="text-white">IPnz.live was 
-                                <a href="https://web.archive.org/web/20170629012956/https://internet.org.nz/news#ipnz-live" target="_blank" rel="noopener noreferrer">
+                                <a href="https://web.archive.org/web/20170629012956/https://internet.org.nz/news#ipnz-live" target="_blank" rel="noopener">
                                 announced in June of 2017</a> as a way to quickly publish live activities to the Internet Party People.
-                                It shared its resources with <a href="https://web.archive.org/web/20191208001017/http://unity4j.com/" target="_blank" rel="noopener noreferrer">Unity4J.com</a> from April of 2018 as the Internet Party sought to
+                                It shared its resources with <a href="https://web.archive.org/web/20191208001017/http://unity4j.com/" target="_blank" rel="noopener">Unity4J.com</a> from April of 2018 as the Internet Party sought to
                                 reconnect and free Julian Assange.<br/>
-                                It was revived in January 2020 as a <a href="https://matomo.org/matomo-vs-google-analytics-comparison/" target="_blank" rel="noopener noreferrer">privacy safe analytics engine</a> for the IP web sites and
+                                It was revived in January 2020 as a <a href="https://matomo.org/matomo-vs-google-analytics-comparison/" target="_blank" rel="noopener">privacy safe analytics engine</a> for the IP web sites and
                                 then migrated from <abbr title="Gollum webserver on Mesh|net">gollum</abbr> in April 2020 
                                 to <abbr title="Joy webserver on Mesh|net">joy</abbr> where it linked all the things until 
                                 December 2023 when it was dumped out and split from the Internet Party assets including 
@@ -736,7 +736,7 @@ require('lists/list_members.php');
                     <div class="col-lg-6 col-12 d-flex justify-content-lg-end align-items-center">
                         <ul class="social-icon d-flex justify-content-lg-end">
                             <li class="social-icon-item">
-                                <a href="https://x.com/search?q=InternetPartyPeople" target="_blank" rel="noopener noreferrer" class="social-icon-link">
+                                <a href="https://x.com/search?q=InternetPartyPeople" target="_blank" rel="noopener" class="social-icon-link">
                                     <span class="bi-twitter"></span>
                                 </a>
                             </li>
@@ -748,19 +748,19 @@ require('lists/list_members.php');
                             </li>
 -->
                             <li class="social-icon-item">
-                                <a href="https://www.instagram.com/explore/search/keyword/?q=IPnz" target="_blank" rel="noopener noreferrer" class="social-icon-link">
+                                <a href="https://www.instagram.com/explore/search/keyword/?q=IPnz" target="_blank" rel="noopener" class="social-icon-link">
                                     <span class="bi-instagram"></span>
                                 </a>
                             </li>
 
                             <li class="social-icon-item">
-                                <a href="https://IPnz.live/stream" target="_blank" rel="noopener noreferrer" class="social-icon-link">
+                                <a href="https://IPnz.live/stream" target="_blank" rel="noopener" class="social-icon-link">
                                     <span class="bi-youtube"></span>
                                 </a>
                             </li>
 
                             <li class="social-icon-item">
-                                <a href="https://nz.pinterest.com/internetparty/" target="_blank" rel="noopener noreferrer" class="social-icon-link">
+                                <a href="https://nz.pinterest.com/internetparty/" target="_blank" rel="noopener" class="social-icon-link">
                                     <span class="bi-pinterest"></span>
                                 </a>
                             </li>
