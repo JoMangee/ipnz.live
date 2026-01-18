@@ -284,12 +284,12 @@
                                     <p class="mb-0">making it happen live, with you the Internet Party People</p>
                                 </div>
                             </div>
-                            
-                            <div class="text-center mt-4">
-                                <a href="join.html" class="btn btn-lg btn-danger rounded-pill px-5 py-3 shadow-lg" style="font-size: 1.5rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
-                                    <i class="bi-person-plus-fill me-2"></i>JOIN US NOW
-                                </a>
-                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <a href="join.html" class="btn btn-danger btn-lg rounded-pill shadow-lg d-inline-flex align-items-center justify-content-center" style="font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 1rem 2.5rem; min-width: 240px;">
+                                <i class="bi-person-plus-fill me-2"></i>JOIN US NOW
+                            </a>
                         </div>
                     </div>
 
