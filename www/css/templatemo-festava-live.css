@@ -377,7 +377,7 @@ strong {
 
 .navbar-brand,
 .navbar-brand:hover {
-  color: var(--white-color);
+  color: var(--secondary-color);
   font-size: var(--h5-font-size);
   font-weight: var(--font-weight-bold);
 }
@@ -386,11 +386,12 @@ strong {
   border-radius: var(--border-radius-large);
   margin: 10px;
   padding: 10px 20px;
+  color: var(--dark-color);
 }
 
 .navbar-nav .nav-link {
   display: inline-block;
-  color: var(--white-color);
+  color: var(--dark-color);
   font-size: var(--p-font-size);
   font-weight: var(--font-weight-normal);
   position: relative;
