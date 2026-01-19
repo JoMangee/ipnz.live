@@ -60,10 +60,6 @@ jobs:
           done
           echo "Web server not up" && exit 1
 
-      - name: Import schema
-        run: |
-          docker exec -i ipnz-db mysql -uipnz -pipnz_dev_password ipnz_live < ipnz_db_improved.sql
-
       - name: Seed data
         run: |
           docker exec -i ipnz-db mysql -uipnz -pipnz_dev_password ipnz_live < scripts/seed.sql
