@@ -17,7 +17,7 @@ services:
       - DB_HOST=db
       - DB_NAME=ipnz_live
       - DB_USER=ipnz
-      - DB_PASS=ipnz_dev_password
+      - DB_PASSWORD=ipnz_dev_password
     command: >
       bash -c "docker-php-ext-install mysqli
       && a2enmod rewrite ssl
