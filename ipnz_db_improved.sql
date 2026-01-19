@@ -148,8 +148,7 @@ ALTER TABLE `ipnz_members`
   ADD KEY `idx_join_type` (`join_type`),
   ADD KEY `idx_created_at` (`created_at`),
   ADD KEY `idx_deleted_at` (`deleted_at`),
-  ADD KEY `idx_referrer_uuid` (`referrer_uuid`),
-  ADD CONSTRAINT `fk_referrer` FOREIGN KEY (`referrer_uuid`) REFERENCES `ipnz_members` (`uuid`) ON DELETE SET NULL;
+  ADD KEY `idx_referrer_uuid` (`referrer_uuid`);
 
 --
 -- Indexes for table `ipnz_referrals`
@@ -212,6 +211,12 @@ ALTER TABLE `ipnz_email_verifications`
 
 ALTER TABLE `ipnz_email_audit_log`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for table `ipnz_members`
+--
+ALTER TABLE `ipnz_members`
+  ADD CONSTRAINT `fk_referrer` FOREIGN KEY (`referrer_uuid`) REFERENCES `ipnz_members` (`uuid`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `ipnz_member_activity`
