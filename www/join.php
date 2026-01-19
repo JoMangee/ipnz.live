@@ -257,9 +257,9 @@
                                 (function() {
                                   function prefillFromLocal() {
                                     try {
-                                      var memberId = localStorage.getItem('ipnz_member_id');
+                                      var memberUuid = localStorage.getItem('ipnz_member_uuid');
                                       var profileStr = localStorage.getItem('ipnz_member_profile');
-                                      if (!memberId || !profileStr) return;
+                                      if (!memberUuid || !profileStr) return;
                                       var profile = JSON.parse(profileStr);
                                       // Prefill fields
                                       var nameEl = document.getElementById('join-form-name');
@@ -286,9 +286,9 @@
                                       if (radioEarly) radioEarly.disabled = true;
                                       if (radioStd) radioStd.disabled = true;
                                       if (emailEl) emailEl.disabled = true;
-                                      // Set hidden member_id
-                                      var idEl = document.getElementById('member_id');
-                                      if (idEl) idEl.value = memberId;
+                                      // Set hidden member_uuid
+                                      var idEl = document.getElementById('member_uuid');
+                                      if (idEl) idEl.value = memberUuid;
                                       // Update button label and show edit link
                                       var btn = document.getElementById('submitBtn');
                                       var edit = document.getElementById('editDetails');
@@ -318,8 +318,8 @@
                                 })();
                             </script>
                                 <div class="col-lg-4 col-md-10 col-8 mx-auto">
-                                    <input type="hidden" name="member_id" id="member_id" value="">
-                                    <input type="hidden" name="referrer_id" id="referrer_id" value="">
+                                    <input type="hidden" name="member_uuid" id="member_uuid" value="">
+                                    <input type="hidden" name="referrer_code" id="referrer_code" value="">
                                     <button type="submit" name="submit" id="submitBtn" class="form-control">Join us</button>
                                     <div class="text-center mt-2">
                                         <a href="#" id="editDetails" class="site-footer-link" style="display:none;">Edit details</a>

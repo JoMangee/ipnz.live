@@ -32,18 +32,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hasCustomAvatar = 1;
         }
         
-        // Extract referrer UUID from hidden field
+        // Extract referrer code from hidden field and resolve to UUID
         $referrerUuid = null;
-        if (!empty($_POST['referrer_uuid'])) {
-            $referrerUuid = trim($_POST['referrer_uuid']);
-            // Validate referrer exists
-            $stmt = $connection->prepare("SELECT uuid FROM ipnz_members WHERE uuid = ? AND deleted_at IS NULL");
-            $stmt->bind_param("s", $referrerUuid);
-            $stmt->execute();
-            if ($stmt->get_result()->num_rows === 0) {
-                $referrerUuid = null; // Invalid referrer
+        if (!empty($_POST['referrer_code'])) {
+            $referrerCode = trim(strtoupper($_POST['referrer_code']));
+            // Validate format (6 alphanumeric chars)
+            if (preg_match('/^[A-Z0-9]{6}$/', $referrerCode)) {
+                // Look up UUID by referral_code
+                $stmt = $connection->prepare("SELECT uuid FROM ipnz_members WHERE referral_code = ? AND deleted_at IS NULL");
+                $stmt->bind_param("s", $referrerCode);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                if ($result->num_rows > 0) {
+                    $referrerUuid = $result->fetch_assoc()['uuid'];
+                }
+                $stmt->close();
             }
-            $stmt->close();
         }
         
         // Validate email format
