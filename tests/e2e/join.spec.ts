@@ -23,18 +23,27 @@ test('join form preserves inputs on invalid email', async ({ page }) => {
   await page.fill('input[name="join-form-phone"]', '028-25578835');
   await page.fill('#join-form-message', 'Hello');
 
-  await page.click('button[type="submit"]');
+  // Get the submit button and make sure it's visible
+  const submitBtn = page.locator('button[type="submit"]');
+  await expect(submitBtn).toBeVisible();
   
-  // Wait for form submission to process and error alert to appear
-  await page.waitForTimeout(2000);
+  // Submit and wait for page response (POST should reload or show alert inline)
+  await Promise.all([
+    page.waitForLoadState('networkidle'),
+    submitBtn.click()
+  ]);
   
   // Debug: Check what's on the page after submission
   const alertCount = await page.locator('.alert').count();
   console.log('Alert elements found:', alertCount);
   console.log('Page content after submit:', (await page.textContent('body'))?.substring(0, 800));
   
+  // Check for alert or form still present
+  const formCount = await page.locator('#join-form-name').count();
+  console.log('Form elements after submit:', formCount);
+  
   const alert = page.locator('.alert');
-  await expect(alert).toBeVisible({ timeout: 10000 });
+  await expect(alert).toBeVisible({ timeout: 5000 });
 
   // Values should persist
   await expect(page.locator('#join-form-name')).toHaveValue('Test User');
