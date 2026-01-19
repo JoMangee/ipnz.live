@@ -21,7 +21,7 @@ SET time_zone = "+00:00";
 -- Separated from contact messages for better data organization
 --
 
-CREATE TABLE `ipnz_members` (
+CREATE TABLE IF NOT EXISTS `ipnz_members` (
   `uuid` char(36) NOT NULL COMMENT 'Globally unique identifier (primary key)',
   `id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'Sequential ID for legacy compatibility',
   `referral_code` varchar(10) NOT NULL COMMENT 'Short alphanumeric code for sharing (e.g., A3X9K2)',
@@ -48,7 +48,7 @@ CREATE TABLE `ipnz_members` (
 -- Email verification tokens and status tracking
 --
 
-CREATE TABLE `ipnz_email_verifications` (
+CREATE TABLE IF NOT EXISTS `ipnz_email_verifications` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `member_uuid` char(36) NOT NULL COMMENT 'Member UUID',
   `email` varchar(255) NOT NULL COMMENT 'Email address to verify',
@@ -67,7 +67,7 @@ CREATE TABLE `ipnz_email_verifications` (
 -- Track all email send attempts and their outcomes
 --
 
-CREATE TABLE `ipnz_email_audit_log` (
+CREATE TABLE IF NOT EXISTS `ipnz_email_audit_log` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `member_uuid` char(36) DEFAULT NULL COMMENT 'Member UUID (if applicable)',
   `recipient_email` varchar(255) NOT NULL COMMENT 'Email recipient',
@@ -82,12 +82,31 @@ CREATE TABLE `ipnz_email_audit_log` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ipnz_referrals`
+-- Track referral relationships between members
+--
+
+CREATE TABLE IF NOT EXISTS `ipnz_referrals` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `referrer_uuid` char(36) NOT NULL COMMENT 'UUID of member who made the referral',
+  `referral_uuid` char(36) NOT NULL COMMENT 'UUID of member who was referred',
+  `referral_code` varchar(10) NOT NULL COMMENT 'Referral code used',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Referral timestamp',
+  PRIMARY KEY (`id`),
+  KEY `idx_referrer_uuid` (`referrer_uuid`),
+  KEY `idx_referral_uuid` (`referral_uuid`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Referral tracking table';
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `ipnz_contacts`
 -- Separate table for contact form submissions
 --
 
-CREATE TABLE `ipnz_contacts` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `ipnz_contacts` (
+  `id` bigintIF NOT EXISTS (20) UNSIGNED NOT NULL,
   `name` varchar(100) NOT NULL COMMENT 'Contact person name',
   `email` varchar(255) NOT NULL COMMENT 'Contact email address',
   `company` varchar(150) DEFAULT NULL COMMENT 'Company or affiliation',
@@ -110,8 +129,14 @@ CREATE TABLE `ipnz_member_activity` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `member_uuid` char(36) NOT NULL,
   `activity_type` ENUM('login', 'profile_update', 'avatar_change', 'status_change') NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `ip_address` varchar(45) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,;
+
+--
+-- Indexes for table `ipnz_referrals`
+--
+ALTER TABLE `ipnz_referrals`
+  ADD CONSTRAINT `fk_referrer_member` FOREIGN KEY (`referrer_uuid`) REFERENCES `ipnz_members` (`uuid`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_referral_member` FOREIGN KEY (`referral_uuid`) REFERENCES `ipnz_members` (`uuid`) ON DELETE CASCADE
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Member activity log';
 
