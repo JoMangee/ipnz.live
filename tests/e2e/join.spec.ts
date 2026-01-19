@@ -7,6 +7,15 @@ test('join form preserves inputs on invalid email', async ({ page }) => {
   await page.goto('/join.php');
   // Wait longer for page to fully load and render form
   await page.waitForTimeout(3000);
+  
+  // Debug: Check what's on the page if form not found
+  const formExists = await page.locator('#join-form-name').count();
+  if (formExists === 0) {
+    console.log('Form not found. Page title:', await page.title());
+    console.log('Page URL:', page.url());
+    console.log('Body text (first 500 chars):', (await page.textContent('body'))?.substring(0, 500));
+  }
+  
   await expect(page.locator('#join-form-name')).toBeVisible({ timeout: 15000 });
 
   await page.fill('#join-form-name', 'Test User');
@@ -31,8 +40,15 @@ test('join form preserves inputs on invalid email', async ({ page }) => {
 test('join success sets localStorage referral', async ({ page }) => {
   await page.goto('/join.php');
   // Wait longer for page to fully load and render form
-  await page.waitForTimeout(3000);
-  await expect(page.locator('#join-form-name')).toBeVisible({ timeout: 10000 });
+  await page.waitForTimeout(3000);  
+  // Debug: Check what's on the page if form not found
+  const formExists = await page.locator('#join-form-name').count();
+  if (formExists === 0) {
+    console.log('Form not found. Page title:', await page.title());
+    console.log('Page URL:', page.url());
+    console.log('Body text (first 500 chars):', (await page.textContent('body'))?.substring(0, 500));
+  }
+    await expect(page.locator('#join-form-name')).toBeVisible({ timeout: 10000 });
 
   await page.fill('#join-form-name', 'Referral User');
   await page.fill('#join-form-email', 'referral@example.com');
