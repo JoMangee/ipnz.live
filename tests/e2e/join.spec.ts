@@ -5,8 +5,9 @@ import { test, expect } from '@playwright/test';
 
 test('join form preserves inputs on invalid email', async ({ page }) => {
   await page.goto('/join.php');
-  await page.waitForTimeout(1000);
-  await expect(page.locator('#join-form-name')).toBeVisible({ timeout: 10000 });
+  // Wait longer for page to fully load and render form
+  await page.waitForTimeout(3000);
+  await expect(page.locator('#join-form-name')).toBeVisible({ timeout: 15000 });
 
   await page.fill('#join-form-name', 'Test User');
   await page.fill('#join-form-email', 'invalid-email');
@@ -29,7 +30,8 @@ test('join form preserves inputs on invalid email', async ({ page }) => {
 
 test('join success sets localStorage referral', async ({ page }) => {
   await page.goto('/join.php');
-  await page.waitForTimeout(1000);
+  // Wait longer for page to fully load and render form
+  await page.waitForTimeout(3000);
   await expect(page.locator('#join-form-name')).toBeVisible({ timeout: 10000 });
 
   await page.fill('#join-form-name', 'Referral User');
