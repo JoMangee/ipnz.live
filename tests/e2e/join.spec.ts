@@ -27,6 +27,12 @@ test('join form preserves inputs on invalid email', async ({ page }) => {
   
   // Wait for form submission to process and error alert to appear
   await page.waitForTimeout(2000);
+  
+  // Debug: Check what's on the page after submission
+  const alertCount = await page.locator('.alert').count();
+  console.log('Alert elements found:', alertCount);
+  console.log('Page content after submit:', (await page.textContent('body'))?.substring(0, 800));
+  
   const alert = page.locator('.alert');
   await expect(alert).toBeVisible({ timeout: 10000 });
 
