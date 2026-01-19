@@ -20,5 +20,5 @@ test('homepage loads and X share builds intent', async ({ page }) => {
   const opened = await page.evaluate('window.__openedUrl');
   expect(opened).toBeTruthy();
   expect(opened).toContain('intent/tweet');
-  expect(opened).toMatch(/https:\/\/ipnz\.live/i);
+  expect(opened).toMatch(/https:\/\/(?:ipnz|IPnz)\.live/i);
 });

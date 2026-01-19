@@ -4,7 +4,8 @@ import { test, expect } from '@playwright/test';
 // v2.0: Tests updated for alphanumeric referral codes (6-char format, e.g., GEWEEN)
 
 test('join form preserves inputs on invalid email', async ({ page }) => {
-  await page.goto('/join.php', { waitUntil: 'networkidle' });
+  await page.goto('/join.php');
+  await page.waitForTimeout(1000);
   await expect(page.locator('#join-form-name')).toBeVisible({ timeout: 10000 });
 
   await page.fill('#join-form-name', 'Test User');
@@ -27,7 +28,8 @@ test('join form preserves inputs on invalid email', async ({ page }) => {
 // It runs best in your Docker dev where clientregistration inserts succeed.
 
 test('join success sets localStorage referral', async ({ page }) => {
-  await page.goto('/join.php', { waitUntil: 'networkidle' });
+  await page.goto('/join.php');
+  await page.waitForTimeout(1000);
   await expect(page.locator('#join-form-name')).toBeVisible({ timeout: 10000 });
 
   await page.fill('#join-form-name', 'Referral User');
