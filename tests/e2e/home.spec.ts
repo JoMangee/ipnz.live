@@ -3,10 +3,7 @@ import { test, expect } from '@playwright/test';
 // Verify homepage loads and X share intent builds with referral (if present)
 
 test('homepage loads and X share builds intent', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.locator('.navbar')).toBeVisible();
-
-  // Stub window.open to capture URL without opening real popup
+  // Stub window.open BEFORE navigation to capture calls
   await page.addInitScript(() => {
     (window as any).__openedUrl = null;
     const origOpen = window.open;
@@ -15,6 +12,9 @@ test('homepage loads and X share builds intent', async ({ page }) => {
       return null as any;
     };
   });
+
+  await page.goto('/');
+  await expect(page.locator('.navbar')).toBeVisible();
 
   await page.click('a#share-x');
   const opened = await page.evaluate('window.__openedUrl');
