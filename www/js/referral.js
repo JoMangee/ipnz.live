@@ -10,12 +10,10 @@
     return urlParams.get(param);
   }
 
-  function extractReferralCode(refCode) {
-    // Clean and validate alphanumeric referral code (6 chars, e.g., 'A3X9K2')
-    const cleaned = refCode.toUpperCase().trim();
-    // Accept codes with optional 'm' prefix for backwards compatibility
-    const code = cleaned.startsWith('M') ? cleaned.substring(1) : cleaned;
-    return /^[A-Z0-9]{6}$/.test(code) ? code : null;
+  function extractMemberId(refCode) {
+    // Extract numeric ID from ref code like 'm1' or 'member-1'
+    const match = refCode.match(/\d+/);
+    return match ? parseInt(match[0], 10) : null;
   }
 
   function init() {
@@ -23,27 +21,27 @@
     const refParam = getQueryParam('ref');
     
     if (refParam) {
-      const referralCode = extractReferralCode(refParam);
-      if (referralCode) {
+      const memberId = extractMemberId(refParam);
+      if (memberId) {
         // Store in localStorage
         try {
-          localStorage.setItem('ipnz_incoming_ref', referralCode);
-          localStorage.setItem('ipnz_incoming_ref_code', referralCode);
-          console.log('Referral captured:', referralCode);
+          localStorage.setItem('ipnz_incoming_ref', refParam);
+          localStorage.setItem('ipnz_incoming_ref_id', memberId.toString());
+          console.log('Referral captured:', refParam, 'ID:', memberId);
         } catch (e) {
           console.warn('Failed to store referral:', e);
         }
       }
     }
 
-    // Populate hidden referrer_code field if on join page
-    const referrerField = document.getElementById('referrer_code');
+    // Populate hidden referrer_id field if on join page
+    const referrerField = document.getElementById('referrer_id');
     if (referrerField) {
       try {
-        const storedCode = localStorage.getItem('ipnz_incoming_ref_code');
-        if (storedCode) {
-          referrerField.value = storedCode;
-          console.log('Referrer code populated in form:', storedCode);
+        const storedId = localStorage.getItem('ipnz_incoming_ref_id');
+        if (storedId) {
+          referrerField.value = storedId;
+          console.log('Referrer ID populated in form:', storedId);
         }
       } catch (e) {
         console.warn('Failed to populate referrer:', e);
@@ -62,10 +60,10 @@
 
     try {
       const incomingRef = localStorage.getItem('ipnz_incoming_ref');
-      const memberUuid = localStorage.getItem('ipnz_member_uuid');
+      const memberId = localStorage.getItem('ipnz_member_id');
       
       // Show banner if user was referred but hasn't joined
-      if (incomingRef && !memberUuid) {
+      if (incomingRef && !memberId) {
         const banner = document.getElementById('referral-banner');
         if (banner) {
           banner.style.display = 'block';
