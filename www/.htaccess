@@ -21,20 +21,16 @@
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /
     
-    # NO HTTPS forcing for development - we handle HTTPS via Docker/reverse proxy
-    # NO www forcing for localhost development
-    
-    # ============================================
-    # CLEAN URLs - Remove .php and .html extensions
-    # ============================================
-    
-    # Remove .php or .html from URLs (external redirect)
-    RewriteCond %{THE_REQUEST} /([^.]+)\.(php|html) [NC]
-    RewriteRule ^ /%1 [NC,L,R=301]
+    # Force HTTPS (production only - disabled for local dev)
+    RewriteCond %{HTTPS} off [OR]
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteCond %{HTTP_HOST} !^localhost [NC]
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     
     # ============================================
-    # SPECIFIC PAGE ROUTES
+    # SPECIFIC PAGE ROUTES (MUST BE FIRST FOR LITESPEED)
     # ============================================
     
     # Avatar page
@@ -45,6 +41,20 @@
     
     # Auth/thank you page
     RewriteRule ^auth/?$ auth.php [NC,L]
+    
+    # Verify email page
+    RewriteRule ^verify/?$ verify.php [NC,L]
+    
+    # Resend verification email
+    RewriteRule ^resend/?$ resend.php [NC,L]
+    
+    # ============================================
+    # CLEAN URLs - Remove .php and .html extensions
+    # ============================================
+    
+    # Remove .php or .html from URLs (external redirect)
+    RewriteCond %{THE_REQUEST} /([^.]+)\.(php|html) [NC]
+    RewriteRule ^ /%1 [NC,L,R=301]
     
     # Fallback for extensionless URLs
     RewriteCond %{REQUEST_FILENAME} !-d
