@@ -35,6 +35,7 @@ jobs:
 
       - name: Start Docker Compose
         run: |
+          $COMPOSE down -v || true
           $COMPOSE up -d db web
 
       - name: Wait for db to be ready
