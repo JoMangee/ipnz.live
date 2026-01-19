@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `ipnz_referrals` (
 --
 
 CREATE TABLE IF NOT EXISTS `ipnz_contacts` (
-  `id` bigintIF NOT EXISTS (20) UNSIGNED NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(100) NOT NULL COMMENT 'Contact person name',
   `email` varchar(255) NOT NULL COMMENT 'Contact email address',
   `company` varchar(150) DEFAULT NULL COMMENT 'Company or affiliation',
@@ -129,14 +129,8 @@ CREATE TABLE `ipnz_member_activity` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `member_uuid` char(36) NOT NULL,
   `activity_type` ENUM('login', 'profile_update', 'avatar_change', 'status_change') NOT NULL,
-  `description` varchar(255) DEFAULT NULL,;
-
---
--- Indexes for table `ipnz_referrals`
---
-ALTER TABLE `ipnz_referrals`
-  ADD CONSTRAINT `fk_referrer_member` FOREIGN KEY (`referrer_uuid`) REFERENCES `ipnz_members` (`uuid`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_referral_member` FOREIGN KEY (`referral_uuid`) REFERENCES `ipnz_members` (`uuid`) ON DELETE CASCADE
+  `description` varchar(255) DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL COMMENT 'IP address of activity',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Member activity log';
 
@@ -156,6 +150,13 @@ ALTER TABLE `ipnz_members`
   ADD KEY `idx_deleted_at` (`deleted_at`),
   ADD KEY `idx_referrer_uuid` (`referrer_uuid`),
   ADD CONSTRAINT `fk_referrer` FOREIGN KEY (`referrer_uuid`) REFERENCES `ipnz_members` (`uuid`) ON DELETE SET NULL;
+
+--
+-- Indexes for table `ipnz_referrals`
+--
+ALTER TABLE `ipnz_referrals`
+  ADD CONSTRAINT `fk_referrer_member` FOREIGN KEY (`referrer_uuid`) REFERENCES `ipnz_members` (`uuid`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_referral_member` FOREIGN KEY (`referral_uuid`) REFERENCES `ipnz_members` (`uuid`) ON DELETE CASCADE;
 
 --
 -- Indexes for table `ipnz_email_verifications`
