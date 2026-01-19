@@ -5,7 +5,7 @@ export default defineConfig({
   timeout: 30_000,
   reporter: [['list']],
   use: {
-    baseURL: process.env.BASE_URL || 'https://localhost:8443',
+    baseURL: process.env.BASE_URL || 'http://localhost:8080',
     ignoreHTTPSErrors: true,
     video: 'retain-on-failure'
   },
