@@ -318,8 +318,8 @@
                                 })();
                             </script>
                                 <div class="col-lg-4 col-md-10 col-8 mx-auto">
-                                    <input type="hidden" name="member_id" id="member_id" value="">
-                                    <input type="hidden" name="referrer_id" id="referrer_id" value="">
+                                    <input type="hidden" name="member_uuid" id="member_uuid" value="">
+                                    <input type="hidden" name="referrer_code" id="referrer_code" value="">
                                     <button type="submit" name="submit" id="submitBtn" class="form-control">Join us</button>
                                     <div class="text-center mt-2">
                                         <a href="#" id="editDetails" class="site-footer-link" style="display:none;">Edit details</a>

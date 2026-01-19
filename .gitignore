@@ -11,9 +11,18 @@ ipnz_db.sql
 # Database credentials
 config.ini.php
 database.config.php
+www/datacenter/database.config.php
 .env
 .env.local
 *.env
+
+# SMTP Configuration (contains credentials)
+smtp.config.php
+
+# Email logs
+www/logs/
+logs/
+*.log
 
 # ===== Archives & Distribution Files =====
 www/FestavaLive-1.0.0.zip

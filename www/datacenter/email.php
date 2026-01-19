@@ -153,7 +153,16 @@ HTML;
     }
     
     /**
-     * Actual email sending (uses PHP mail() - should be replaced with proper SMTP)
+     * Actual email sending - uses SMTP for production, file logging for dev
+     * 
+     * Production SMTP Configuration (set via environment variables or config):
+     * - SMTP_HOST: Mail server hostname (e.g., smtp.mailgun.org)
+     * - SMTP_PORT: SMTP port (usually 587 for TLS, 465 for SSL, 25 for plain)
+     * - SMTP_USERNAME: SMTP authentication username
+     * - SMTP_PASSWORD: SMTP authentication password
+     * - SMTP_ENCRYPTION: TLS or SSL (defaults to TLS)
+     * - MAIL_FROM_EMAIL: From email address
+     * - MAIL_FROM_NAME: From display name
      */
     private function sendEmail($to, $subject, $htmlBody) {
         $headers = "MIME-Version: 1.0\r\n";
@@ -162,16 +171,147 @@ HTML;
         $headers .= "Reply-To: hello-ops@ipnz.live\r\n";
         $headers .= "X-Mailer: PHP/" . phpversion();
         
-        // For local dev, just log and return true
+        // For local dev, just log to file and return true
         if (getenv('APP_ENV') === 'local' || strpos($_SERVER['SERVER_NAME'], 'localhost') !== false) {
-            error_log("EMAIL (DEV MODE): To: $to, Subject: $subject");
-            error_log("Body preview: " . substr(strip_tags($htmlBody), 0, 200));
+            $logDir = dirname(__DIR__) . '/logs';
+            if (!is_dir($logDir)) {
+                mkdir($logDir, 0755, true);
+            }
+            $logFile = $logDir . '/emails.log';
+            $timestamp = date('Y-m-d H:i:s');
+            $bodyPreview = substr(strip_tags($htmlBody), 0, 300);
+            $logMsg = "[$timestamp] TO: $to | SUBJECT: $subject | BODY: $bodyPreview\n";
+            file_put_contents($logFile, $logMsg, FILE_APPEND);
             // In local, we "succeed" but don't actually send
             return true;
         }
         
-        // Production: use mail() (should be replaced with SMTP library like PHPMailer)
-        return mail($to, $subject, $htmlBody, $headers);
+        // Production: Try SMTP first, fallback to mail()
+        return $this->sendViaSmtp($to, $subject, $htmlBody, $headers) || mail($to, $subject, $htmlBody, $headers);
+    }
+    
+    /**
+     * Send email via SMTP connection
+     * Supports TLS and SSL encryption
+     */
+    private function sendViaSmtp($to, $subject, $htmlBody, $headers) {
+        // Get SMTP configuration from environment or config file
+        $smtpConfig = $this->getSmtpConfig();
+        
+        if (!$smtpConfig || !isset($smtpConfig['host'])) {
+            return false; // SMTP not configured, will fallback to mail()
+        }
+        
+        try {
+            // Connect to SMTP server
+            $host = $smtpConfig['host'];
+            $port = $smtpConfig['port'] ?? 587;
+            $encryption = $smtpConfig['encryption'] ?? 'tls';
+            
+            // Use fsockopen for basic SMTP support (no external dependencies)
+            if ($encryption === 'ssl') {
+                $host = 'ssl://' . $host;
+            }
+            
+            $socket = @fsockopen($host, $port, $errno, $errstr, 10);
+            
+            if (!$socket) {
+                error_log("SMTP connection failed to {$host}:{$port} - {$errstr}");
+                return false;
+            }
+            
+            // Read SMTP greeting
+            fgets($socket, 512);
+            
+            // Send EHLO
+            fputs($socket, "EHLO ipnz.live\r\n");
+            fgets($socket, 512);
+            
+            // Enable TLS if specified
+            if ($encryption === 'tls') {
+                fputs($socket, "STARTTLS\r\n");
+                fgets($socket, 512);
+                stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT);
+                
+                // Resend EHLO after TLS
+                fputs($socket, "EHLO ipnz.live\r\n");
+                fgets($socket, 512);
+            }
+            
+            // Authenticate if credentials provided
+            if (isset($smtpConfig['username']) && isset($smtpConfig['password'])) {
+                fputs($socket, "AUTH LOGIN\r\n");
+                fgets($socket, 512);
+                fputs($socket, base64_encode($smtpConfig['username']) . "\r\n");
+                fgets($socket, 512);
+                fputs($socket, base64_encode($smtpConfig['password']) . "\r\n");
+                $response = fgets($socket, 512);
+                
+                if (strpos($response, '235') === false) {
+                    error_log("SMTP authentication failed");
+                    fclose($socket);
+                    return false;
+                }
+            }
+            
+            // Set from address
+            $fromEmail = $smtpConfig['from_email'] ?? $this->fromEmail;
+            fputs($socket, "MAIL FROM:<{$fromEmail}>\r\n");
+            fgets($socket, 512);
+            
+            // Set to address
+            fputs($socket, "RCPT TO:<{$to}>\r\n");
+            fgets($socket, 512);
+            
+            // Send message
+            fputs($socket, "DATA\r\n");
+            fgets($socket, 512);
+            
+            $message = "To: {$to}\r\n";
+            $message .= "Subject: {$subject}\r\n";
+            $message .= $headers . "\r\n";
+            $message .= $htmlBody;
+            $message .= "\r\n.\r\n";
+            
+            fputs($socket, $message);
+            $response = fgets($socket, 512);
+            
+            // Close connection
+            fputs($socket, "QUIT\r\n");
+            fclose($socket);
+            
+            return strpos($response, '250') !== false;
+            
+        } catch (Exception $e) {
+            error_log("SMTP error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Get SMTP configuration from environment or .env-like config
+     */
+    private function getSmtpConfig() {
+        // Check environment variables first
+        if (getenv('SMTP_HOST')) {
+            return [
+                'host' => getenv('SMTP_HOST'),
+                'port' => getenv('SMTP_PORT') ?? 587,
+                'encryption' => getenv('SMTP_ENCRYPTION') ?? 'tls',
+                'username' => getenv('SMTP_USERNAME'),
+                'password' => getenv('SMTP_PASSWORD'),
+                'from_email' => getenv('MAIL_FROM_EMAIL') ?? 'noreply@ipnz.live',
+                'from_name' => getenv('MAIL_FROM_NAME') ?? 'IPnz.live'
+            ];
+        }
+        
+        // Check for config file
+        $configFile = dirname(__DIR__, 2) . '/smtp.config.php';
+        if (file_exists($configFile)) {
+            return require $configFile;
+        }
+        
+        return null;
     }
     
     /**

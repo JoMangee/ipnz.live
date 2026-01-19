@@ -324,16 +324,67 @@
                 <div class="row justify-content-center">
 
                     <div class="col-12 text-center">
-                        <h2 class="mb-4">Meet the Internet Party People</h1>
+                        <h2 class="mb-4">Meet the Internet Party People</h2>
                     </div>
 <?php
 require('datacenter/database.php');
-    $querySearch = 'select * from view_active_members';
-    $sqlSearch = $connection->query($querySearch) or die ($connection->connect_error);             
-    $totResult = mysqli_num_rows($sqlSearch);
-require('lists/list_members.php');
+// Get 3 random active members to showcase
+$querySearch = 'SELECT * FROM view_active_members ORDER BY RAND() LIMIT 3';
+$sqlSearch = $connection->query($querySearch) or die ($connection->connect_error);
+
+// Display random members as tiles
+$colCount = 0;
+$inRow = false;
+while ($results = $sqlSearch->fetch_assoc()) { 
+    // Start a new row every 2 members
+    if ($colCount % 2 == 0) {
+        if ($inRow) echo '</div>'; // Close previous row
+        echo '<div class="row justify-content-center">';
+        $inRow = true;
+    }
+    $colCount++;
+    
+    // Format the avatar URL
+    $avatarUrl = !empty($results['avatar_url']) ? htmlspecialchars($results['avatar_url']) : 'https://models.readyplayer.me/64bfa15f0e72c63d7c3934a6.png';
+    $joinDate = date('F j, Y', strtotime($results['created_at']));
+    $referralCode = htmlspecialchars($results['referral_code']);
 ?>
                     <div class="col-lg-5 col-12">
+                        <div class="avatars-thumb">
+                            <div class="avatars-image-wrap">
+                                <img src="<?php echo $avatarUrl; ?>" class="img-fluid avatars-image" style="aspect-ratio: 640 / 427;">
+                            </div>
+
+                            <div class="avatars-hover">
+                                <p>
+                                    <strong>Name:</strong>
+                                    <?php echo htmlspecialchars($results['name']); ?>
+                                </p>
+
+                                <p>
+                                    <strong>Joined:</strong>
+                                    <?php echo $joinDate; ?>
+                                </p>
+
+                                <p>
+                                    <strong>Type:</strong>
+                                    <?php echo ucfirst(str_replace('_', ' ', $results['join_type'])); ?>
+                                </p>
+
+                                <hr>
+
+                                <p class="mb-0">
+                                    <strong>IPnz.live ID:</strong>
+                                    <a href="/join?ref=<?php echo $referralCode; ?>">id-<?php echo $referralCode; ?></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+<?php 
+}
+if ($inRow) echo '</div>'; // Close the last row
+?>
+                    <div class="col-lg-5 col-12" style="display:none;">
                         <div class="avatars-thumb">
                             <div class="avatars-image-wrap">
                                 <img src="images/avatars/6786f28dd245fa47607251a4.jpg" class="img-fluid avatars-image" style="aspect-ratio: 640 / 963;">
