@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 // Verify join form preserves data on validation error and sets referral on success
+// v2.0: Tests updated for alphanumeric referral codes (6-char format, e.g., GEWEEN)
 
 test('join form preserves inputs on invalid email', async ({ page }) => {
   await page.goto('/join.php');
@@ -41,5 +42,7 @@ test('join success sets localStorage referral', async ({ page }) => {
 
   const ref = await page.evaluate(() => localStorage.getItem('ipnz_ref'));
   expect(ref).toBeTruthy();
-  expect(ref).toMatch(/^m\d+$/);
+  // v2.0: Alphanumeric referral codes (6 chars, e.g., GEWEEN, PU2VSQ)
+  // Legacy format m\d+ still supported for backwards compat
+  expect(ref).toMatch(/^([A-Z0-9]{6}|m\d+)$/);
 });
