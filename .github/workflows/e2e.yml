@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   e2e:
     runs-on: ubuntu-latest
@@ -21,9 +25,33 @@ jobs:
           npm ci
           npx playwright install --with-deps
 
+      - name: Select compose command
+        run: |
+          if docker compose version >/dev/null 2>&1; then
+            echo "COMPOSE=docker compose" >> $GITHUB_ENV
+          else
+            echo "COMPOSE=docker-compose" >> $GITHUB_ENV
+          fi
+
       - name: Start Docker Compose
         run: |
-          docker-compose up -d || docker compose up -d
+          $COMPOSE up -d db web
+
+      - name: Wait for db to be ready
+        run: |
+          for i in {1..40}; do
+            if $COMPOSE ps | grep -q "ipnz-db" | grep -q "Up"; then
+              if docker exec ipnz-db mysqladmin ping -h 127.0.0.1 -uipnz -pipnz_dev_password --silent; then
+                exit 0
+              fi
+            else
+              echo "ipnz-db not running yet; retrying"
+            fi
+            sleep 3
+          done
+          echo "DB not ready; logs follow"
+          $COMPOSE logs db || true
+          exit 1
 
       - name: Wait for web to be ready
         run: |
