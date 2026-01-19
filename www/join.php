@@ -137,13 +137,14 @@
                             <div class="join-form-body">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-12">
-                                        <input type="text" name="join-form-name" id="join-form-name"
+                                        <input type="text" name="join-form-name" id="join-form-name" value="<?php echo isset($GLOBALS['form_data']['join-form-name']) ? htmlspecialchars($GLOBALS['form_data']['join-form-name']) : ''; ?>"
                                             class="form-control" placeholder="Name" required>
                                     </div>
 
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <input type="email" name="join-form-email" id="join-form-email"
                                             pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email address"
+                                            value="<?php echo isset($GLOBALS['form_data']['join-form-email']) ? htmlspecialchars($GLOBALS['form_data']['join-form-email']) : ''; ?>"
                                             required>
                                     </div>
                                     <!-- <div class="col-lg-6 col-md-6 col-12">
@@ -159,7 +160,9 @@
 
                                 <input type="tel" class="form-control" name="join-form-phone"
                                     placeholder="Ph 028255788 or 028-25578835 or 028-2557-8835" 
-                                    pattern="(\d{3}[- ]?\d{3,4}[- ]?\d{4}|\d{3}[- ]?\d{6})" required>
+                                    pattern="(\d{3}[- ]?\d{3,4}[- ]?\d{4}|\d{3}[- ]?\d{6})" 
+                                    value="<?php echo isset($GLOBALS['form_data']['join-form-phone']) ? htmlspecialchars($GLOBALS['form_data']['join-form-phone']) : ''; ?>"
+                                    required>
 
                                 <h6>Choose join Type</h6>
 
@@ -167,7 +170,8 @@
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="form-check form-control">
                                             <input class="form-check-input" type="radio" name="join-type"
-                                                id="flexRadioDefault1" checked="checked" value="0">
+                                                id="flexRadioDefault1" value="0"
+                                                <?php echo (!isset($GLOBALS['form_data']['join-type']) || $GLOBALS['form_data']['join-type'] == '0') ? 'checked="checked"' : ''; ?>>
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Early access
                                             </label>
@@ -177,7 +181,8 @@
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <div class="form-check form-check-radio form-control">
                                             <input class="form-check-input" type="radio" name="join-type"
-                                                id="flexRadioDefault2" value="1">
+                                                id="flexRadioDefault2" value="1"
+                                                <?php echo (isset($GLOBALS['form_data']['join-type']) && $GLOBALS['form_data']['join-type'] == '1') ? 'checked="checked"' : ''; ?>>
                                             <label class="form-check-label" for="flexRadioDefault2">
                                                 Standard
                                             </label>
@@ -186,8 +191,8 @@
                                 </div>
 
                                 <textarea name="join-form-message" rows="3" class="form-control"
-                                    id="join-form-message" placeholder="Additional Request"></textarea>
-                                <h6>Create Your Avatar</h6>
+                                    id="join-form-message" placeholder="Additional Request"><?php echo isset($GLOBALS['form_data']['join-form-message']) ? htmlspecialchars($GLOBALS['form_data']['join-form-message']) : ''; ?></textarea>
+                                <h6>Create Your Avatar <span style="color: #999; font-weight: normal; font-size: 14px;">(Optional - we'll use a default if skipped)</span></h6>
                             <input type="button" value="Open Ready Player Me" onClick="displayIframe()" />
                             <p>Avatar URL:</p> 
                             <input id="avatarUrl" name="avatarUrl" class="form-control border-0" type="text" readonly/>
@@ -248,8 +253,77 @@
                                     document.getElementById('frame').hidden = false;
                                 }
                             </script>
+                            <script>
+                                (function() {
+                                  function prefillFromLocal() {
+                                    try {
+                                      var memberId = localStorage.getItem('ipnz_member_id');
+                                      var profileStr = localStorage.getItem('ipnz_member_profile');
+                                      if (!memberId || !profileStr) return;
+                                      var profile = JSON.parse(profileStr);
+                                      // Prefill fields
+                                      var nameEl = document.getElementById('join-form-name');
+                                      var emailEl = document.getElementById('join-form-email');
+                                      var phoneEl = document.querySelector('input[name="join-form-phone"]');
+                                      var msgEl = document.getElementById('join-form-message');
+                                      var avatarEl = document.getElementById('avatarUrl');
+                                      var radioEarly = document.getElementById('flexRadioDefault1');
+                                      var radioStd = document.getElementById('flexRadioDefault2');
+                                      if (nameEl && typeof profile.name === 'string') nameEl.value = profile.name;
+                                      if (emailEl && typeof profile.email === 'string') emailEl.value = profile.email;
+                                      if (phoneEl && typeof profile.phone === 'string') phoneEl.value = profile.phone;
+                                      if (msgEl && typeof profile.additional_request === 'string') msgEl.value = profile.additional_request;
+                                      if (avatarEl && typeof profile.avatar_url === 'string') avatarEl.value = (profile.avatar_url || '');
+                                      if (profile.join_type === 'standard') {
+                                        if (radioStd) radioStd.checked = true;
+                                      } else {
+                                        if (radioEarly) radioEarly.checked = true;
+                                      }
+                                      // Disable fields by default (email stays disabled for safety)
+                                      ['join-form-name','join-form-message'].forEach(function(id){ var el=document.getElementById(id); if(el){ el.disabled=true; }});
+                                      if (phoneEl) phoneEl.disabled = true;
+                                      if (avatarEl) avatarEl.disabled = true;
+                                      if (radioEarly) radioEarly.disabled = true;
+                                      if (radioStd) radioStd.disabled = true;
+                                      if (emailEl) emailEl.disabled = true;
+                                      // Set hidden member_id
+                                      var idEl = document.getElementById('member_id');
+                                      if (idEl) idEl.value = memberId;
+                                      // Update button label and show edit link
+                                      var btn = document.getElementById('submitBtn');
+                                      var edit = document.getElementById('editDetails');
+                                      if (btn) btn.textContent = 'Update details';
+                                      if (edit) edit.style.display = 'inline';
+                                    } catch(e) { /* ignore */ }
+                                  }
+                                  function enableEditing(evt){
+                                    evt && evt.preventDefault();
+                                    ['join-form-name','join-form-message'].forEach(function(id){ var el=document.getElementById(id); if(el){ el.disabled=false; }});
+                                    var phoneEl = document.querySelector('input[name="join-form-phone"]');
+                                    var avatarEl = document.getElementById('avatarUrl');
+                                    var radioEarly = document.getElementById('flexRadioDefault1');
+                                    var radioStd = document.getElementById('flexRadioDefault2');
+                                    if (phoneEl) phoneEl.disabled = false;
+                                    if (avatarEl) avatarEl.disabled = false;
+                                    if (radioEarly) radioEarly.disabled = false;
+                                    if (radioStd) radioStd.disabled = false;
+                                    var btn = document.getElementById('submitBtn');
+                                    if (btn) btn.textContent = 'Save changes';
+                                  }
+                                  document.addEventListener('DOMContentLoaded', function(){
+                                    prefillFromLocal();
+                                    var edit = document.getElementById('editDetails');
+                                    if (edit) edit.addEventListener('click', enableEditing);
+                                  });
+                                })();
+                            </script>
                                 <div class="col-lg-4 col-md-10 col-8 mx-auto">
-                                    <button type="submit" name="submit" class="form-control">Join us</button>
+                                    <input type="hidden" name="member_id" id="member_id" value="">
+                                    <input type="hidden" name="referrer_id" id="referrer_id" value="">
+                                    <button type="submit" name="submit" id="submitBtn" class="form-control">Join us</button>
+                                    <div class="text-center mt-2">
+                                        <a href="#" id="editDetails" class="site-footer-link" style="display:none;">Edit details</a>
+                                    </div>
                                 </div>
                             </div>
 
@@ -400,5 +474,6 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.sticky.js"></script>
     <script src="js/custom.js"></script>
+    <script src="js/referral.js"></script>
 </body>
 </html>

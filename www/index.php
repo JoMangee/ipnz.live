@@ -165,6 +165,26 @@
             </div>
         </nav>
 
+        <!-- Referral Welcome Banner -->
+        <div id="referral-banner" style="display:none; background: linear-gradient(135deg, #F8CB2E 0%, #EE5007 100%); padding: 15px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-8 col-md-7 col-12 text-white">
+                        <strong style="font-size: 1.1rem;">🎉 Hey! Someone thought this was awesome and invited you to join IPnz.live!</strong>
+                        <p class="mb-0 mt-1" style="font-size: 0.95rem;">Be part of the Internet Party movement. Join us and get your own referral link too.</p>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-12 mt-2 mt-md-0">
+                        <a href="/join" id="referral-join-btn" class="btn btn-light btn-lg rounded-pill px-4 py-2" style="font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                            Join Now
+                        </a>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-12 mt-2 mt-md-0">
+                        <a href="#" id="referral-dismiss" class="text-white" style="font-size: 1.5rem; text-decoration: none;" title="Dismiss">×</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <section class="hero-section" id="section_1">
             <div class="section-overlay"></div>
@@ -207,8 +227,8 @@
                                 </li>
 
                                 <li class="social-icon-item">
-                                    <a href="https://twitter.com/intent/tweet?text=I%27ve%20just%20heard%20about%20the%20%23InternetPartyPeople&related=IPnzTech%3Amaking%20tech%20happen%20for%20IPnz&url=https%3A%2F%2FIPnz.live&via=thegeekjo" target="_blank" rel="noopener" class="social-icon-link" data-text="I%27ve%20just%20heard%20about%20the%20%23InternetPartyPeople%20at%20https://IPnz.live" data-url="https://IPnz.live" data-show-count="false">
-                                        <span class="bi-twitter"></span>
+                                    <a id="share-x" href="#" target="_blank" rel="noopener" class="social-icon-link" aria-label="Share on X">
+                                        <span class="bi-x"></span>
                                     </a>
                                 </li>
 
@@ -219,6 +239,7 @@
                                 </li>
                             </ul>
                         </div>
+                        <script src="js/share.js"></script>
                     </div>
                 </div>
             </div>
@@ -249,7 +270,7 @@
                                 It was revived in January 2020 as a <a href="https://matomo.org/matomo-vs-google-analytics-comparison/" target="_blank" rel="noopener">privacy safe analytics engine</a> for the IP web sites and
                                 then migrated from <abbr title="Gollum webserver on Mesh|net">gollum</abbr> in April 2020 
                                 to <abbr title="Joy webserver on Mesh|net">joy</abbr> where it linked all the things until 
-                                December 2023 when it was dumped out and split from the Internet Party assets including 
+                                December 2023 when it was dumped out and split from the <a href="https://ipnz.github.io/Docs/IPAConstitution/" target="_blank" rel="noopener">Internet Party assets</a> including 
                                 Unity4J.com and Internet.org.nz when they <abbr title="[sic]moved to Russia">changed custodian</abbr>.
                             </p>
 
@@ -307,7 +328,7 @@
                     </div>
 <?php
 require('datacenter/database.php');
-    $querySearch = 'select * from view_members';
+    $querySearch = 'select * from view_active_members';
     $sqlSearch = $connection->query($querySearch) or die ($connection->connect_error);             
     $totResult = mysqli_num_rows($sqlSearch);
 require('lists/list_members.php');
@@ -871,6 +892,8 @@ T e m p l a t e M o
     <script src="js/jquery.sticky.js"></script>
     <script src="js/click-scroll.js"></script>
     <script src="js/custom.js"></script>
+    <script src="js/share.js"></script>
+    <script src="js/referral.js"></script>
 
 </body>
 
