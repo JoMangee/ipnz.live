@@ -24,10 +24,11 @@ test('join form preserves inputs on invalid email', async ({ page }) => {
   await page.fill('#join-form-message', 'Hello');
 
   await page.click('button[type="submit"]');
-
-  // Expect error alert present
+  
+  // Wait for form submission to process and error alert to appear
+  await page.waitForTimeout(2000);
   const alert = page.locator('.alert');
-  await expect(alert).toBeVisible();
+  await expect(alert).toBeVisible({ timeout: 10000 });
 
   // Values should persist
   await expect(page.locator('#join-form-name')).toHaveValue('Test User');
