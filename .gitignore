@@ -1,5 +1,13 @@
 # IPnz.live - Git Ignore Rules
 
+# ===== NODE & TEST ARTIFACTS =====
+# Node modules (can be reinstalled via npm install)
+node_modules/
+
+# Playwright test results (generated locally)
+test-results/
+playwright-report/
+
 # ===== SECURITY: DO NOT COMMIT =====
 # Database dumps with real user data
 ipnz_db.sql
