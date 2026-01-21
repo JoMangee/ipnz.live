@@ -1,4 +1,7 @@
-version: '3.8'
+# IPnz Live Docker Configuration (Apache + MariaDB)
+# Port allocation: APACHE_HOST=8080, APACHE_SSL_HOST=8443, MARIADB_HOST=3306 (see ../../../mesh-local/ports.conf)
+# See PORTS_DOCUMENTATION.md for complete port reference
+# version: '3.8'
 
 services:
   web:
@@ -40,3 +43,4 @@ services:
 
 volumes:
   db_data:
+
