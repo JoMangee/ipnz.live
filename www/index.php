@@ -74,6 +74,9 @@
     <link href="css/bootstrap-icons.css" rel="stylesheet">
 
     <link href="css/templatemo-festava-live.css" rel="stylesheet">
+    
+    <!-- Privacy-Respecting NZ Map -->
+    <link href="css/nz-map.css" rel="stylesheet">
 
     <!--
 
@@ -89,7 +92,7 @@
        _paq.push(['trackPageView']);
        _paq.push(['enableLinkTracking']);
        (function() {
-         var u="a.ipnz.live/"; /* check if works on https:// and http:// - does work on file:// - was //a.ip */
+         var u="//a.ipnz.live/";
          _paq.push(['setTrackerUrl', u+'matomo.php']);
          _paq.push(['setSiteId', '6']);
          var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
@@ -102,9 +105,6 @@
         <!-- End Matomo -->
         </noscript>
      <!-- End Matomo Code -->
-
-     <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.css" />
-     <script src="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.js"></script>
    
 </head>
 
@@ -724,68 +724,15 @@ if ($inRow) echo '</div>'; // Close the last row
 
                             <div class="tab-pane fade" id="nav-ContactMap" role="tabpanel"
                                 aria-labelledby="nav-ContactMap-tab">
-                                <script type="text/javascript">
-
-                                    function onMapClick(e) {
-                                        var lat  = e.latlng.lat.toFixed(5);
-                                        var lon  = e.latlng.lng.toFixed(5);
-                                        var gps = "";
-                                        if (lat>0) gps+='N'; else gps+='S';
-                                        if (10>Math.abs(lat))  gps += "0";
-                                        gps += Math.abs(lat).toFixed(5)+" ";
-                                        if (lon>0) gps+='E'; else gps+='W';
-                                        if (10>Math.abs(lon))  gps += "0";
-                                        if (100>Math.abs(lon)) gps += "0";
-                                        gps += Math.abs(lon).toFixed(5);
-                                        var textArea = document.createElement("textarea");
-                                        textArea.style.position = 'fixed';
-                                        textArea.style.top = 0;
-                                        textArea.style.left = 0;
-                                        textArea.style.width = '2em';
-                                        textArea.style.height = '2em';
-                                        textArea.style.padding = 0;
-                                        textArea.style.border = 'none';
-                                        textArea.style.outline = 'none';
-                                        textArea.style.boxShadow = 'none';
-                                        textArea.style.background = 'transparent';
-                                        textArea.value = gps;
-                                        document.body.appendChild(textArea);
-                                        textArea.select();
-                                        try {
-                                          var successful = document.execCommand('copy');
-                                          var msg = successful ? 'Successfully' : 'Unsuccessfully';
-                                          console.log(msg + ' copied ' + gps + ' to clipboard ');
-                                        } catch (err) {
-                                          console.log('Oops, unable to copy');
-                                        }
-                                        document.body.removeChild(textArea);
-                                    }
-                                    
-                                        
-                                    var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-                                    var osm = new L.TileLayer(osmUrl, {minZoom:2, maxZoom:19});		
-                                    
-                                    var googleStreets = new L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{minZoom:1, maxZoom:19, subdomains:['mt0','mt1','mt2','mt3']});
-                                    
-                                    var googleSat = new L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{minZoom:1, maxZoom: 21,subdomains:['mt0','mt1','mt2','mt3']});
-                                    
-                                    var mapl = new L.Map('nav-ContactMap', { doubleClickZoom:false, zoomControl:true, maxBounds:([[165,-34],[181,-47]]) });
-                                    
-                                    L.control.layers({"OSM (Mapnik)": osm, "Google Street": googleStreets, "Google Earth": googleSat}).addTo(mapl);
-                                    
-                                    mapl.addLayer(osm);
-                                    var map_set = "osm";
-                                    mapl.fitBounds([[164,-34],[181,-47]]);
-                                    
-                                    mapl.on('click', onMapClick);
-                                        
-                                    </script>
-                                <iframe id="maptab" class="google-map"
-                                    src="https://www.openstreetmap.org/export/embed.html?bbox=165.423342%2C-33.853057%2C181.208499%2C-47.438457&amp;layer=mapnik"
-                                    width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
-                                <!-- You can easily copy the embed code from Open Street Maps -> Share -> Embed a map // -->
-                                <div  id="mapDiv" ></div>
+                                
+                                <!-- Privacy-Respecting NZ Map - No external tracking -->
+                                <div id="nz-map-container" class="p-3">
+                                    <p class="text-center mb-4">
+                                        <i class="bi bi-shield-check"></i> 
+                                        Privacy-respecting map with no external tracking or data collection
+                                    </p>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -945,6 +892,7 @@ T e m p l a t e M o
     <script src="js/custom.js"></script>
     <script src="js/share.js"></script>
     <script src="js/referral.js"></script>
+    <script src="js/nz-map.js"></script>
 
 </body>
 
