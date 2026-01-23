@@ -1,6 +1,16 @@
-# IPnz.live v2.0 - Pre-Deployment Checklist
+# IPnz.live v2.1 - Pre-Deployment Checklist
 
-## ✅ Code Ready to Deploy
+## ✅ Code Ready to Deploy (v2.1 - January 24, 2026)
+
+### Privacy & Security Enhancements (NEW in v2.1)
+- [x] `www/js/nz-map.js` - Privacy-respecting SVG map (8KB)
+- [x] `www/css/nz-map.css` - Map styling with accessibility (7KB)
+- [x] `.htaccess` - Enhanced CSP headers (XSS protection, external resource controls)
+- [x] Security headers - X-Frame-Options, X-Content-Type-Options, Referrer-Policy
+- [x] Leaflet.js removed - Zero CDN dependencies
+- [x] OpenStreetMap iframe removed - No user location leakage
+- [x] Matomo.js path fixed - 404 error resolved
+- [x] Deprecated meta tags removed
 
 ### Backend Services (Production Ready)
 - [x] `www/datacenter/email.php` - SMTP implementation with TLS/SSL, multiple providers, fallback support
@@ -39,6 +49,9 @@
 - [x] Session-based admin authentication
 - [x] Prepared statements for SQL injection prevention
 - [x] .gitignore updated to exclude sensitive files
+- [x] Enhanced CSP headers (v2.1) - XSS protection
+- [x] Additional security headers (v2.1) - X-Frame-Options, X-Content-Type-Options
+- [x] Privacy-respecting map (v2.1) - Zero external tracking
 
 ### Testing (All Passing ✅)
 - [x] `test_full_flow.php` - Complete registration and referral flow tested

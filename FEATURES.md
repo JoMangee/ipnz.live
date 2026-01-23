@@ -182,6 +182,30 @@
   - Red error banner with preserved form data  
   - Disabled fields on return visits (toggle with "Edit details")
 
+### Location Map (Privacy-Respecting)
+
+- **Zero External Tracking**: Self-contained SVG map with no tile downloads
+- **Interactive Markers**: Click any city to see meetup details
+  - Auckland, Wellington, Christchurch, Hamilton, Dunedin
+- **Copy-Friendly**: One-click copy of:
+  - Full physical addresses
+  - GPS coordinates (latitude, longitude)
+- **Accessibility First**:
+  - Keyboard navigation (Tab + Enter/Space)
+  - ARIA labels for screen readers
+  - High contrast mode support
+  - Reduced motion support
+- **No User Leakage**: Unlike Google Maps or OSM embeds, no requests reveal user location
+- **Lightweight**: 15KB total (CSS + JS + inline SVG)
+- **How It Works**:
+  ```javascript
+  // User clicks Auckland marker
+  → Shows: "Aotea Square, Queen Street, Auckland CBD"
+  → Copy button: Copies address to clipboard
+  → Coordinates: "174.7633,-36.8485" (copyable)
+  → No external API calls, no tracking
+  ```
+
 ---
 
 ## 🚀 Viral Growth Loop
@@ -280,6 +304,20 @@ Alex Shares with Jordan (ref=PU2VSQ)
 - Resends verification email to members
 - Rate-limited to prevent abuse
 - Creates new token if previous expired
+
+**`js/nz-map.js`** (NEW in v2.1):
+- Privacy-respecting SVG map of New Zealand
+- Interactive markers for 5 major cities
+- One-click copy of addresses and GPS coordinates
+- Zero external dependencies or tracking
+- Fully accessible with keyboard navigation
+- Lightweight: ~8KB self-contained
+
+**`css/nz-map.css`** (NEW in v2.1):
+- Responsive map styling
+- Accessibility features (high contrast, reduced motion support)
+- Print-friendly styles
+- Toast notifications for copy actions
 
 **`lists/list_members.php`** (Admin panel):
 - Bcrypt-protected authentication
@@ -392,8 +430,19 @@ https://localhost (trusted cert via trust-cert.bat)
 - [x] **Admin Authentication**: Bcrypt-protected admin panel
 - [x] **Production SMTP**: Multi-provider support with fallback
 
+### ✅ Phase 2.5 (COMPLETED - v2.1 - January 2026)
+
+- [x] **Privacy-Respecting Map**: Self-hosted SVG map of NZ with zero external tracking
+- [x] **Interactive Location Markers**: Auckland, Wellington, Christchurch, Hamilton, Dunedin
+- [x] **Copy-Friendly Addresses**: One-click copy of addresses and GPS coordinates
+- [x] **Enhanced CSP Headers**: Comprehensive Content Security Policy
+- [x] **Security Fixes**: Fixed Matomo.js path, removed deprecated meta tags
+- [x] **Accessibility**: Full keyboard navigation, ARIA labels, screen reader support
+- [x] **Lightweight**: 15KB map vs 200KB+ Leaflet dependency removed
+
 ### Phase 3 (Planned)
 
+- [ ] **Member Density Visualization**: Show approximate member counts per region (privacy-preserving)
 - [ ] **Referral Dashboard**: Member stats — "You've referred 12 people! 🎉"  
 - [ ] **Leaderboard**: Top advocates of the month  
 - [ ] **Referral Rewards**: Badges, early access perks, swag eligibility
@@ -426,6 +475,13 @@ https://localhost (trusted cert via trust-cert.bat)
 - Bootstrap 5 (responsive UI)  
 - Ready Player Me (3D avatars)  
 - Matomo (privacy-respecting analytics)
+- Privacy-Respecting SVG Maps (zero external tracking)
+
+**Privacy First**:
+- Self-hosted map with no external tile downloads
+- No location tracking or data collection
+- Zero dependencies on Google Maps, Apple Maps, or OSM servers
+- All member interactions stay on our infrastructure
 
 **Special Thanks**:
 - Internet Party of New Zealand for the mission  
