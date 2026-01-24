@@ -6,6 +6,9 @@
 
 require 'datacenter/database.php';
 
+// HTML wrapper for better formatting
+echo "<pre style='font-family: monospace; white-space: pre-wrap; word-wrap: break-word; background: #f5f5f5; padding: 15px; border-radius: 5px;'>\n";
+
 echo "=== IPnz.live Referral Flow Test ===\n\n";
 
 // Step 1: Get an active member to use as referrer
@@ -116,6 +119,8 @@ echo "console.log('New member UUID:', localStorage.getItem('ipnz_member_uuid'));
 echo "console.log('New referral code:', localStorage.getItem('ipnz_ref'));\n\n";
 
 echo "=== Ready to test! ===\n";
+
+echo "</pre>\n"; // Close HTML pre tag
 
 // Helper function
 function generateReferralCode() {
