@@ -1,6 +1,6 @@
 # IPnz.live v2.0 — The User Journey ✨
 
-> **Last updated:** January 20, 2026  
+> **Last updated:** January 24, 2026  
 > **Version:** 2.0 (UUID Architecture with Email Verification)  
 > **What is this?** A walkthrough of how IPnz.live creates awesome member experiences with privacy-respecting referrals, secure joins, email verification, and seamless updates.
 
@@ -41,7 +41,7 @@
 1. **Form Loads with Hidden Referrer Tracking**  
    - `referral.js` populates the hidden `referrer_code` field with `GEWEEN` from localStorage  
    - Alex fills in: Name, Email, Phone, Join Type (Early Access / Standard), optional message  
-   - Avatar is optional — skipping it uses a friendly default Ready Player Me avatar
+  - Avatar is optional — skipping it uses a friendly default Ready Player Me avatar; custom Ready Player Me URLs are cached locally to `/images/avatars/<uuid>.*` to avoid CDN reliance
 
 2. **Submit → Backend Magic** (`clientregistration.php`)  
    - **UUID Generation**: Creates globally unique identifier (e.g., `c4ca4238-a0b9-3382-8dcc-509a6f75849b`)
@@ -170,6 +170,11 @@
 - **Members Section**: Live grid of active members (fetched from `view_active_members`)  
 - **About Section**: Link to [IPA Constitution](https://ip.org.nz/constitution) for transparency  
 - **Referral Banner**: Dynamically appears for referred visitors (dismissible)
+
+### Visual & Accessibility Updates (v2.1.1)
+
+- Higher-contrast palette: text #404040, accent purple #7B2CBF, primary gold #F8CB2E, secondary orange #EE5007
+- Navbar/referral banner layering fixed (z-index 1040) to avoid overlap
 
 ### Join Page
 

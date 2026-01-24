@@ -22,6 +22,11 @@ return [
 
 See `smtp.config.example.php` for examples with Mailgun, AWS SES, SendGrid, etc.
 
+### 3. Avatar Cache Directory (Required)
+**Location:** `/home2/ipnz/ipnz-live/www/images/avatars`
+
+Create if missing and ensure it is writable (e.g., `chmod 755 /home2/ipnz/ipnz-live/www/images/avatars`). ReadyPlayer.me avatars are cached here during signup/profile updates.
+
 ## Setup Steps
 
 ### Step 1: SSH to Joyful Host

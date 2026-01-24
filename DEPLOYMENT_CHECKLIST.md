@@ -12,6 +12,11 @@
 - [x] Matomo.js path fixed - 404 error resolved
 - [x] Deprecated meta tags removed
 
+### Avatar Caching (NEW in v2.1.1)
+- [x] ReadyPlayer.me avatars cached locally in `www/images/avatars/<uuid>.*`
+- [x] Deployment creates `www/images/avatars` (verify perms 755 so PHP can write)
+- [x] Default avatar fallback preserved
+
 ### Backend Services (Production Ready)
 - [x] `www/datacenter/email.php` - SMTP implementation with TLS/SSL, multiple providers, fallback support
 - [x] `www/datacenter/clientregistration.php` - UUID generation, email verification, referral tracking

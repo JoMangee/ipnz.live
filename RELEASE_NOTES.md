@@ -1,3 +1,18 @@
+# IPnz.live v2.1.1 - Avatar Caching & Accessibility Hardening
+
+## Release Date: January 24, 2026
+
+### 🎯 Highlights
+- **ReadyPlayer.me avatar caching**: New signups and profile updates now download member avatars to `/images/avatars/<uuid>.<ext>` and store the local URL in the database to remove CDN dependency while preserving the default avatar fallback.
+- **Accessibility/contrast tuning**: Updated palette (text #404040, accent purple #7B2CBF, primary gold #F8CB2E, secondary orange #EE5007) for stronger contrast; navbar/referral banner layering fixed (z-index 1040) to prevent overlap.
+- **Deployment hygiene**: Staging deploy creates `/images/avatars` automatically via `.cpanel.yml`; check permissions (755) so PHP can write cached avatars.
+
+### 🐛 Fixes
+- Referral banner no longer overlaps the navbar on scroll.
+- Playwright pages unaffected; no API/schema changes.
+
+---
+
 # IPnz.live v2.1 - Privacy & Security Enhancement Release
 
 ## Release Date: January 24, 2026
