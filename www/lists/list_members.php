@@ -210,3 +210,19 @@ if (!$authenticated) {
 <div class="mt-4 text-muted">
     <p><small>Total members: <strong><?php echo $sqlSearch->num_rows; ?></strong></small></p>
 </div>
+
+<?php
+// Version marker: short digest over key files for deployment verification
+$versionMeta = include __DIR__ . '/../version_meta.php';
+$vmFiles = $versionMeta['files'] ?? [];
+$vmParts = [];
+$basePath = dirname(__DIR__);
+foreach ($vmFiles as $vmRel) {
+    $vmPath = $basePath . '/' . $vmRel;
+    if (is_file($vmPath)) {
+        $vmParts[] = hash_file('sha256', $vmPath);
+    }
+}
+$vmDigest = substr(hash('sha256', implode('', $vmParts)), 0, 12);
+echo "<!-- version=" . ($versionMeta['version'] ?? 'unknown') . " commit=" . ($versionMeta['commit'] ?? 'unknown') . " digest=" . $vmDigest . " -->";
+?>

@@ -48,5 +48,19 @@
             </div>
         </div>
     </main>
+    <?php
+    // Version marker: short digest over key files for deployment verification
+    $versionMeta = include __DIR__ . '/version_meta.php';
+    $vmFiles = $versionMeta['files'] ?? [];
+    $vmParts = [];
+    foreach ($vmFiles as $vmRel) {
+        $vmPath = __DIR__ . '/' . $vmRel;
+        if (is_file($vmPath)) {
+            $vmParts[] = hash_file('sha256', $vmPath);
+        }
+    }
+    $vmDigest = substr(hash('sha256', implode('', $vmParts)), 0, 12);
+    echo "<!-- version=" . ($versionMeta['version'] ?? 'unknown') . " commit=" . ($versionMeta['commit'] ?? 'unknown') . " digest=" . $vmDigest . " -->";
+    ?>
 </body>
 </html>

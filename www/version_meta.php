@@ -1,7 +1,7 @@
 <?php
 return [
     'version' => 'v2.1.1',
-    'commit' => 'f4eaa2a',
+    'commit' => 'HEAD',
     'built_at' => '2026-01-24T00:00:00Z',
     'files' => [
         'index.php',
@@ -9,5 +9,10 @@ return [
         'datacenter/clientregistration.php',
         'js/nz-map.js',
         'css/templatemo-festava-live.css',
+        'auth.php',
+        'resend.php',
+        'verify.php',
+        'avatar.php',
+        'lists/list_members.php',
     ],
 ];
