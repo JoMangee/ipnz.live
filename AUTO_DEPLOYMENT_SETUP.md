@@ -1,108 +1,128 @@
-# Auto-Deployment Setup Guide for IPnz.live
+# cPanel Deployment Workflow for IPnz.live
 
 ## Current Status
-✅ `.cpanel.yml` is properly configured and ready for auto-deployment
+✅ `.cpanel.yml` is properly configured for deployments
+✅ cPanel Git Version Control is set up and ready
 
-## Steps to Enable Auto-Deployment
+## Deployment Method (Manual)
 
-### 1. In cPanel (Joyful Host)
+Your cPanel version uses manual deployment buttons in the "Pull or Deploy" tab.
 
+### Simple 2-Step Deployment Process
+
+**Step 1: Update from Remote**
 ```
-cPanel Dashboard
-  → "Git Version Control" (or "Git™ Repository Management")
-    → Select repository: /home2/ipnz/repositories/ipnz.live
-      → Click "Manage Deployment"
-        → Enable automatic deployment
-          → Select branch: "ahmad"
-          → Copy the webhook URL
+cPanel → Git Version Control → ipnz.live staging
+  → "Pull or Deploy" tab
+    → Click "Update from Remote"
+      → Pulls latest commits from GitHub (branch: ahmad)
 ```
 
-### 2. Configure GitHub Webhook
+**Step 2: Deploy HEAD Commit**
+```
+cPanel → Git Version Control → ipnz.live staging
+  → "Pull or Deploy" tab
+    → Click "Deploy HEAD Commit"
+      → Runs .cpanel.yml tasks
+      → Deploys to https://auth-dev.ipnz.live/
+```
 
-Once cPanel generates the webhook URL:
+## Typical Workflow
 
-1. Go to: https://github.com/JoMangee/ipnz.live/settings/hooks
-2. Click **"Add webhook"**
-3. Paste the cPanel webhook URL into **"Payload URL"**
-4. Select:
-   - Content type: `application/json`
-   - Events: `Push events` ✅
-   - Active: ✅ (checked)
-5. Click **"Add webhook"**
-
-### 3. Test Auto-Deployment
-
-Once configured:
+### Development (Local Machine)
 ```bash
-# Push to GitHub
+# Make changes locally
+git add .
+git commit -m "Your commit message"
 git push origin ahmad
-
-# This will automatically:
-# 1. Trigger GitHub webhook
-# 2. cPanel receives the webhook
-# 3. .cpanel.yml tasks run automatically
-# 4. Files deployed to /home2/ipnz/ipnz-live/www/
-
-# Result: https://auth-dev.ipnz.live/ updates automatically
 ```
 
-## What Gets Deployed (.cpanel.yml Tasks)
+### Staging Deployment (cPanel)
+```
+1. Log into cPanel → Git Version Control
+2. Click "Update from Remote" button
+3. Wait for success message
+4. Click "Deploy HEAD Commit" button
+5. Wait for deployment complete (1-2 minutes)
+6. Test at https://auth-dev.ipnz.live/
+```
+
+## What Gets Deployed
+
+When you click "Deploy HEAD Commit", the `.cpanel.yml` file runs these tasks:
 
 ✅ All files from `www/` directory
-✅ `.htaccess` (security headers, rewrites)
+✅ `.htaccess` (security headers, URL rewrites)
 ✅ `test_referral_flow.php` (test script)
 ✅ Preserves existing database config
 ✅ Clears PHP opcode cache
 
 ## Deployment Verification
 
-After pushing, check:
-1. GitHub → Webhooks → Recent Deliveries (green checkmark = success)
-2. cPanel → Git Version Control → Deployment Log
-3. Browser: https://auth-dev.ipnz.live/ should show latest changes
+After deployment completes:
+1. Check cPanel → History (shows deployment log)
+2. Browser: https://auth-dev.ipnz.live/ should show latest changes
+3. Check test script: https://auth-dev.ipnz.live/test_referral_flow.php
+
+## Timeline with Manual Deployment
+
+- Push to GitHub ✓
+- SSH to cPanel or use cPanel UI
+- Click "Update from Remote" (30 seconds)
+- Click "Deploy HEAD Commit" (1-2 minutes)
+- Total: ~2-3 minutes
 
 ## Troubleshooting
 
-If webhook doesn't trigger:
-1. **Check webhook URL** - Must be unique and accessible
-2. **Verify branch name** - Should match "ahmad" 
-3. **Check cPanel logs** - `/home2/ipnz/.log`
-4. **Resend webhook** - GitHub allows manual resend for testing
-5. **Fallback** - Can always deploy manually via cPanel
+If deployment fails:
+1. **Check cPanel History** - Shows error messages
+2. **Verify branch** - Should be "ahmad"
+3. **Check file permissions** - `.htaccess` and PHP files need correct perms
+4. **Review .cpanel.yml** - Ensure syntax is correct
+5. **Check logs** - `/home2/ipnz/.log` for deployment errors
 
-## Timeline with Auto-Deploy
+## Manual SSH Deployment (Fallback)
 
-### Without Auto-Deploy (Current)
-- Push to GitHub ✓
-- SSH to cPanel or use cPanel UI
-- Manually click "Deploy HEAD Commit" button
-- Wait 1-2 minutes
-- Total: ~3-5 minutes
+If cPanel deployment fails, deploy manually:
 
-### With Auto-Deploy
-- Push to GitHub ✓
-- Automatic webhook triggers
-- Deployment runs immediately
-- ~1-2 minutes automatically
-- Total: ~2 minutes
-
-## Commands for Manual Deploy (if needed)
-
-If auto-deploy fails, deploy manually:
 ```bash
 # SSH to cPanel
-ssh user@joyful.host
+ssh user@ipnz.ipnz.live
 
 # Navigate to repo
 cd /home2/ipnz/repositories/ipnz.live
 
-# Pull latest
+# Pull latest from GitHub
 git pull origin ahmad
 
-# Run deployment tasks manually
-bash -c 'export DEPLOYPATH=/home2/ipnz/ipnz-live/www; /bin/cp -R www/* $DEPLOYPATH/; /bin/cp .htaccess $DEPLOYPATH/.htaccess; /bin/cp test_referral_flow.php $DEPLOYPATH/test_referral_flow.php'
+# Export deploy path
+export DEPLOYPATH=/home2/ipnz/ipnz-live/www
+
+# Copy www files
+/bin/cp -R www/* $DEPLOYPATH/
+
+# Copy critical root files
+/bin/cp .htaccess $DEPLOYPATH/.htaccess
+/bin/cp test_referral_flow.php $DEPLOYPATH/test_referral_flow.php
+
+# Create avatars directory
+mkdir -p $DEPLOYPATH/images/avatars
+
+# Set permissions
+chmod 600 $DEPLOYPATH/datacenter/database.config.php
+
+# Clear cache
+touch $DEPLOYPATH/index.php $DEPLOYPATH/join.php $DEPLOYPATH/auth.php
+
+echo "Deployment complete!"
 ```
 
----
+## Summary
 
-**Recommended**: Enable auto-deployment to reduce manual steps. It's much faster once configured!
+**Your current setup**:
+- ✅ Repository configured in cPanel
+- ✅ Branch checked out: `ahmad`
+- ✅ `.cpanel.yml` ready for deployment
+- ✅ Manual "Update from Remote" + "Deploy HEAD Commit" buttons available
+
+**No webhook setup needed** - the manual buttons work perfectly fine for a staging environment. Just 2 clicks in cPanel after each git push!
