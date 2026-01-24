@@ -166,7 +166,7 @@
         </nav>
 
         <!-- Referral Welcome Banner -->
-        <div id="referral-banner" style="display:none; background: linear-gradient(135deg, #F8CB2E 0%, #EE5007 100%); padding: 15px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+        <div id="referral-banner" style="display:none; background: linear-gradient(135deg, #F8CB2E 0%, #EE5007 100%); padding: 15px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); position: relative; z-index: 1040; margin-top: 0;">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-8 col-md-7 col-12 text-white">
@@ -174,7 +174,7 @@
                         <p class="mb-0 mt-1" style="font-size: 0.95rem;">Be part of the Internet Party movement. Join us and get your own referral link too.</p>
                     </div>
                     <div class="col-lg-3 col-md-4 col-12 mt-2 mt-md-0">
-                        <a href="/join" id="referral-join-btn" class="btn btn-light btn-lg rounded-pill px-4 py-2" style="font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                        <a href="/join" id="referral-join-btn" class="btn btn-light btn-lg rounded-pill px-4 py-2" style="font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.2); white-space: nowrap;">
                             Join Now
                         </a>
                     </div>
