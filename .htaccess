@@ -18,6 +18,11 @@ Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
 # Get rid of extensions .html and .php on web addresses
 <IfModule mod_rewrite.c>
     RewriteEngine on 
+    
+    # Exclude test scripts from rewriting
+    RewriteCond %{REQUEST_URI} ^/(test_.*\.php|datacenter/.*)$ [NC]
+    RewriteRule ^ - [L]
+    
     RewriteCond %{REQUEST_FILENAME} !-d 
     RewriteCond %{REQUEST_FILENAME}.php -f 
     RewriteCond %{REQUEST_FILENAME}.html !-f
