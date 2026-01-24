@@ -4,7 +4,7 @@
  * This script tests the complete referral system
  */
 
-require 'www/datacenter/database.php';
+require 'datacenter/database.php';
 
 echo "=== IPnz.live Referral Flow Test ===\n\n";
 
