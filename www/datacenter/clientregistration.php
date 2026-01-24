@@ -2,6 +2,83 @@
 require('database.php');
 require('email.php');
 
+// Cache avatar images locally to avoid external CDN dependency
+function cacheAvatarLocally($url, $memberUuid)
+{
+    if (empty($url) || empty($memberUuid)) {
+        return null;
+    }
+
+    // Basic URL validation
+    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+        return null;
+    }
+
+    $allowedMime = [
+        'image/jpeg' => 'jpg',
+        'image/png'  => 'png',
+        'image/webp' => 'webp',
+    ];
+
+    // Prepare destination
+    $avatarDir = realpath(__DIR__ . '/../images/avatars');
+    if ($avatarDir === false) {
+        // Try to create if missing
+        $avatarDir = __DIR__ . '/../images/avatars';
+        if (!is_dir($avatarDir) && !mkdir($avatarDir, 0755, true)) {
+            return null;
+        }
+    }
+
+    // Fetch remote image (8s timeout, follow redirects, 6MB cap)
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS      => 3,
+        CURLOPT_TIMEOUT        => 8,
+        CURLOPT_CONNECTTIMEOUT => 5,
+        CURLOPT_USERAGENT      => 'IPNZ Avatar Cacher',
+    ]);
+    $data = curl_exec($ch);
+    if ($data === false) {
+        curl_close($ch);
+        return null;
+    }
+
+    $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE) ?: '';
+    $sizeBytes   = strlen($data);
+    curl_close($ch);
+
+    // Enforce size limit (6MB)
+    if ($sizeBytes <= 0 || $sizeBytes > 6 * 1024 * 1024) {
+        return null;
+    }
+
+    // Derive extension
+    $ext = $allowedMime[$contentType] ?? null;
+    if (!$ext) {
+        // Fallback to path extension
+        $pathExt = strtolower(pathinfo(parse_url($url, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION));
+        if (in_array($pathExt, ['jpg', 'jpeg', 'png', 'webp'])) {
+            $ext = ($pathExt === 'jpeg') ? 'jpg' : $pathExt;
+        }
+    }
+    if (!$ext) {
+        return null; // Unknown type
+    }
+
+    $fileName   = $memberUuid . '.' . $ext;
+    $targetPath = rtrim($avatarDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $fileName;
+
+    if (file_put_contents($targetPath, $data) === false) {
+        return null;
+    }
+
+    // Return public-relative URL
+    return '/images/avatars/' . $fileName;
+}
+
 // Initialize email service
 $emailService = new EmailService($connection);
 
@@ -59,8 +136,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // If this is an update request (member_id present), perform update and return
             $memberId = isset($_POST['member_id']) ? trim($_POST['member_id']) : '';
             if (!empty($memberId) && is_numeric($memberId)) {
+                // Fetch member UUID for caching
+                $memberUuidForUpdate = null;
+                $uuidStmt = $connection->prepare("SELECT uuid FROM ipnz_members WHERE id = ? AND email = ? AND deleted_at IS NULL");
+                $uuidStmt->bind_param("is", $memberId, $email);
+                if ($uuidStmt->execute()) {
+                    $uuidResult = $uuidStmt->get_result();
+                    if ($row = $uuidResult->fetch_assoc()) {
+                        $memberUuidForUpdate = $row['uuid'];
+                    }
+                }
+                $uuidStmt->close();
+
+                if ($hasCustomAvatar == 1 && $memberUuidForUpdate) {
+                    $cachedAvatar = cacheAvatarLocally($avatarUrl, $memberUuidForUpdate);
+                    if ($cachedAvatar) {
+                        $avatarUrl = $cachedAvatar;
+                    }
+                }
+
                 $stmt = $connection->prepare("UPDATE ipnz_members SET name = ?, phone = ?, join_type = ?, additional_request = ?, avatar_url = ?, has_custom_avatar = ? WHERE id = ? AND email = ? AND deleted_at IS NULL");
-                $stmt->bind_param("ssssssss", $name, $phone, $joinType, $addrqst, $avatarUrl, $hasCustomAvatar, $memberId, $email);
+                $stmt->bind_param("sssssiis", $name, $phone, $joinType, $addrqst, $avatarUrl, $hasCustomAvatar, $memberId, $email);
                 if ($stmt->execute()) {
                     echo '<div align="center"><div class="alert alert-primary" role="alert" style="background-color: #4CAF50; border: 1px solid #aaa; color:white; text-align:center; width:100%; border-radius:0px; margin-top:20px; font-family: "GothamPro", sans-serif;">Details updated successfully.</div></div>';
                     echo '<script>try{localStorage.setItem("ipnz_member_id","' . htmlspecialchars($memberId) . '");localStorage.setItem("ipnz_member_profile",JSON.stringify({name:' . json_encode($name) . ',email:' . json_encode($email) . ',phone:' . json_encode($phone) . ',join_type:' . json_encode($joinType) . ',additional_request:' . json_encode($addrqst) . ',avatar_url:' . json_encode($avatarUrl) . ',has_custom_avatar:' . json_encode($hasCustomAvatar) . '}));}catch(e){}</script>';
@@ -98,10 +194,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             $memberUuid = generateUUID();
             $referralCode = $emailService->generateReferralCode();
+
+            if ($hasCustomAvatar == 1) {
+                $cachedAvatar = cacheAvatarLocally($avatarUrl, $memberUuid);
+                if ($cachedAvatar) {
+                    $avatarUrl = $cachedAvatar;
+                }
+            }
             
             // Insert new member with UUID and referral code
             $stmt = $connection->prepare("INSERT INTO ipnz_members (uuid, referral_code, name, email, phone, join_type, additional_request, avatar_url, has_custom_avatar, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')");
-            $stmt->bind_param("sssssssis", $memberUuid, $referralCode, $name, $email, $phone, $joinType, $addrqst, $avatarUrl, $hasCustomAvatar);
+            $stmt->bind_param("ssssssssi", $memberUuid, $referralCode, $name, $email, $phone, $joinType, $addrqst, $avatarUrl, $hasCustomAvatar);
             
             if ($stmt->execute()) {
                 $stmt->close();
