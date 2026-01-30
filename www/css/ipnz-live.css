@@ -2,10 +2,6 @@
   ipnz-live.css
   Origin: Based on TemplateMo 583 Festava Live (https://templatemo.com/tm-583-festava-live)
   Refactored and customized for IPnz.live, 2026.
-/*
-  ipnz-live.css
-  Origin: Based on TemplateMo 583 Festava Live (https://templatemo.com/tm-583-festava-live)
-  Refactored and customized for IPnz.live, 2026.
 */
 
 /*
@@ -49,5 +45,167 @@
   --font-weight-bold:             700;
 }
 
-/* ...rest of the CSS from templatemo-festava-live.css... */
+body {
+  background-color: var(--white-color);
+  font-family: var(--body-font-family); 
+}
+
+/*---------------------------------------
+  TYPOGRAPHY               
+-----------------------------------------*/
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--dark-color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--font-weight-bold);
+}
+
+h1 {
+  font-size: var(--h1-font-size);
+}
+
+h2 {
+  font-size: var(--h2-font-size);
+}
+
+h3 {
+  font-size: var(--h3-font-size);
+}
+
+h4 {
+  font-size: var(--h4-font-size);
+}
+
+h5 {
+  font-size: var(--h5-font-size);
+}
+
+h6 {
+  font-size: var(--h6-font-size);
+}
+
+p {
+  color: var(--p-color);
+  font-size: var(--p-font-size);
+  font-weight: var(--font-weight-light);
+}
+
+ul li {
+  color: var(--p-color);
+  font-size: var(--p-font-size);
+  font-weight: var(--font-weight-light);
+}
+
+a, 
+button {
+  touch-action: manipulation;
+  transition: all 0.3s;
+}
+
+a {
+  display: inline-block;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--link-hover-color);
+}
+
+b,
+strong {
+  font-weight: var(--font-weight-bold);
+}
+
+.link-fx-1 {
+  color: var(--white-color);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 6px;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.link-fx-1:hover {
+  color: var(--link-hover-color);
+}
+
+.link-fx-1:hover::before {
+  transform: translateX(17px) scaleX(0);
+  transition: transform .2s;
+}
+
+.link-fx-1:hover .icon circle {
+  stroke-dashoffset: 200;
+  transition: stroke-dashoffset .2s .1s;
+}
+
+.link-fx-1:hover .icon line {
+  transform: rotate(-180deg);
+}
+
+.link-fx-1:hover .icon line:last-child {
+  transform: rotate(180deg);
+}
+
+.link-fx-1::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transform-origin: right center;
+  transition: transform .2s .1s;
+}
+
+.link-fx-1 .icon {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  transform: translateX(100%) rotate(90deg);
+  font-size: 32px;
+}
+
+.icon {
+  --size: 1em;
+  height: var(--size);
+  width: var(--size);
+  display: inline-block;
+  color: inherit;
+  fill: currentColor;
+  line-height: 1;
+  flex-shrink: 0;
+  max-width: initial;
+}
+
+.link-fx-1 .icon circle {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset .2s;
+}
+
+.link-fx-1 .icon line {
+  transition: transform .4s;
+  transform-origin: 13px 15px;
+}
+
+.link-fx-1 .icon line:last-child {
+  transform-origin: 19px 15px;
+}
 
