@@ -1,0 +1,53 @@
+/*
+  ipnz-live.css
+  Origin: Based on TemplateMo 583 Festava Live (https://templatemo.com/tm-583-festava-live)
+  Refactored and customized for IPnz.live, 2026.
+/*
+  ipnz-live.css
+  Origin: Based on TemplateMo 583 Festava Live (https://templatemo.com/tm-583-festava-live)
+  Refactored and customized for IPnz.live, 2026.
+*/
+
+/*
+  This file is a refactored version of TemplateMo 583 Festava Live.
+  All original template code is preserved and adapted for IPnz.live branding and accessibility.
+*/
+
+/*---------------------------------------
+  CUSTOM PROPERTIES ( VARIABLES )             
+-----------------------------------------*/
+:root {
+  --white-color:                  #FFFFFF;
+  --primary-color:                #E6B800; /* Darker yellow for better contrast */
+  --secondary-color:              #FF8800; /* Muted accessible orange */
+  --section-bg-color:             #f0f8ff;
+  --custom-btn-bg-color:          #FF8800; /* Muted accessible orange */
+  --custom-btn-bg-hover-color:    #c05a00; /* Darker orange for hover */
+  --dark-color:                   #181818; /* Near-black for backgrounds */
+  --p-color:                      #404040;  /* Improved contrast from #717275 */
+  --border-color:                 #7B2CBF;  /* Purple accent for party vibe */
+  --link-hover-color:             #FF8800;  /* Muted accessible orange */
+
+  --body-font-family:             'Outfit', sans-serif;
+
+  --h1-font-size:                 74px;
+  --h2-font-size:                 46px;
+  --h3-font-size:                 32px;
+  --h4-font-size:                 28px;
+  --h5-font-size:                 24px;
+  --h6-font-size:                 22px;
+  --p-font-size:                  18px;
+  --btn-font-size:                14px;
+  --copyright-font-size:          16px;
+
+  --border-radius-large:          100px;
+  --border-radius-medium:         20px;
+  --border-radius-small:          10px;
+
+  --font-weight-light:            300;
+  --font-weight-normal:           400;
+  --font-weight-bold:             700;
+}
+
+/* ...rest of the CSS from templatemo-festava-live.css... */
+

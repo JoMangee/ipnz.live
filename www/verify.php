@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Verify Email - IPnz.live</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/templatemo-festava-live.css" rel="stylesheet">
+    <link href="css/ipnz-live.css" rel="stylesheet">
 </head>
 <body>
     <main style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #F8CB2E 0%, #EE5007 100%);">

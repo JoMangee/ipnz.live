@@ -14,7 +14,7 @@
     <link href="css/google-fonts.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-icons.css" rel="stylesheet">
-    <link href="css/templatemo-festava-live.css" rel="stylesheet">
+    <link href="css/ipnz-live.css" rel="stylesheet">
         <style>
         .frame {
             width: 100%;

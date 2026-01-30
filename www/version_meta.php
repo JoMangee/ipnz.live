@@ -8,7 +8,7 @@ return [
         'join.php',
         'datacenter/clientregistration.php',
         'js/nz-map.js',
-        'css/templatemo-festava-live.css',
+        'css/ipnz-live.css',
         'auth.php',
         'resend.php',
         'verify.php',
