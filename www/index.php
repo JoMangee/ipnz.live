@@ -134,7 +134,7 @@
                     IPnz.live
                 </a>
 
-                <a href="join.html" class="btn custom-btn d-lg-none ms-auto me-4">Join Now</a>
+                <a href="join.php" class="btn custom-btn d-lg-none ms-auto me-4">Join Now</a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -279,7 +279,7 @@
                             <p class="text-white">The dream of a connected, collaborative Internet Party People making
                                 it happen live hasn't gone away.  Join us by connecting with this experience right now
                                 via our OG socials on X (Twitter), Facebook, Instagram, even chat with us on Discord - or
-                                jump into it live and <a href="join.html">Link with us</a> now!
+                                jump into it live and <a href="join.php">Link with us</a> now!
                             </p>
 
                             <h6 class="text-white mt-4">Internet Party People</h6>
@@ -308,7 +308,7 @@
                         </div>
                         
                         <div class="text-center mt-4">
-                            <a href="join.html" class="btn btn-danger btn-lg rounded-pill shadow-lg d-inline-flex align-items-center justify-content-center" style="font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 1rem 2.5rem; min-width: 240px;">
+                            <a href="join.php" class="btn btn-danger btn-lg rounded-pill shadow-lg d-inline-flex align-items-center justify-content-center" style="font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 1rem 2.5rem; min-width: 240px;">
                                 <i class="bi-person-plus-fill me-2"></i>JOIN US NOW
                             </a>
                         </div>
@@ -612,7 +612,7 @@ if ($inRow) echo '</div>'; // Close the last row
                                 <li class="pricing-list-item">standard content</li>
                             </ul>
 
-                            <a class="link-fx-1 color-contrast-higher mt-4" href="join.html">
+                            <a class="link-fx-1 color-contrast-higher mt-4" href="join.php">
                                 <span>Buy join</span>
                                 <svg class="icon" viewBox="0 0 32 32" aria-hidden="true">
                                     <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -647,7 +647,7 @@ if ($inRow) echo '</div>'; // Close the last row
                                 <li class="pricing-list-item">live chat support</li>
                             </ul>
 
-                            <a class="link-fx-1 color-contrast-higher mt-4" href="join.html">
+                            <a class="link-fx-1 color-contrast-higher mt-4" href="join.php">
                                 <span>Buy join</span>
                                 <svg class="icon" viewBox="0 0 32 32" aria-hidden="true">
                                     <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
