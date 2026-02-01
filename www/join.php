@@ -16,15 +16,13 @@
     <link href="css/bootstrap-icons.css" rel="stylesheet">
     <link href="css/ipnz-live.css" rel="stylesheet">
         <style>
-        .frame {
+        .genies-frame {
             width: 100%;
-            height: 800px;
+            min-height: 720px;
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
-                Droid Sans, Helvetica Neue, sans-serif;
-            padding: 20px;
-            font-size: 14px;
-            border: none;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #fff;
         }
 
         .warning {
@@ -195,93 +193,48 @@
                                 <div style="background-color: #f8f9fa; border-left: 4px solid #0d6efd; padding: 12px; margin: 15px 0; border-radius: 4px;">
                                     <h6>Create Your Avatar <span style="color: #999; font-weight: normal; font-size: 14px;">(Optional - we'll use a default if skipped)</span></h6>
                                     <p style="font-size: 13px; color: #555; margin-bottom: 10px;">
-                                        <strong>Choose how to create your avatar:</strong>
+                                        <strong>Create your Genies avatar:</strong>
                                         <ul style="margin-top: 8px; margin-bottom: 8px; padding-left: 20px;">
-                                            <li><strong>Use your camera</strong> - Quickest option, creates an avatar that looks like you</li>
-                                            <li><strong>Upload a photo</strong> - Use an existing photo of yourself</li>
-                                            <li><strong>Create from scratch</strong> - Manually customize a 3D avatar</li>
+                                            <li><strong>Login with email</strong> to start the Genies editor</li>
+                                            <li><strong>Upload a photo</strong> or <strong>create from scratch</strong></li>
+                                            <li><strong>Save your avatar</strong> and copy the avatar URL or ID</li>
                                         </ul>
                                     </p>
                                     <p style="font-size: 12px; color: #666; margin-bottom: 10px;">
-                                        <i class="bi-shield-check"></i> This loads an external avatar creator from <strong>ReadyPlayerMe</strong>. Camera access is optional and only used if you choose that option. Your avatar image is stored securely with us.
+                                        <i class="bi-shield-check"></i> This loads the Genies avatar creator from <strong>avatars.ipnz.live</strong>. Camera access is optional and only used if you choose that option.
                                     </p>
                                     <p style="font-size: 12px; color: #d9534f; background-color: #fff5f5; padding: 8px; border-radius: 3px; margin-bottom: 0;">
                                         <strong>Note:</strong> If you skip this step, a default avatar will be used. Profiles without custom avatars are less likely to be approved for display to other members or featured on the front page.
                                     </p>
-                                    <input type="button" value="Open Avatar Creator" onClick="confirmAndDisplayIframe()" class="btn btn-primary" style="margin-top: 8px;" />
+                                    <input type="button" value="Open Avatar Creator" onClick="toggleGeniesIframe(true)" class="btn btn-primary" style="margin-top: 8px;" />
+                                    <a href="https://avatars.ipnz.live/avatarcreate.php" target="_blank" rel="noopener" class="btn btn-outline-secondary" style="margin-top: 8px; margin-left: 6px;">Open in new tab</a>
                                 </div>
-                            <p>Avatar URL:</p> 
-                            <input id="avatarUrl" name="avatarUrl" class="form-control border-0" type="text" readonly/>
+                            <p>Avatar URL or ID:</p>
+                            <input id="avatarUrl" name="avatarUrl" class="form-control" type="text" placeholder="Paste your Genies avatar URL or ID (optional)" />
 
 
-                            <iframe id="frame" class="frame" allow="camera *; microphone *; clipboard-write" csp="default-src 'self' https://readyplayer.me https://ipnz.readyplayer.me; script-src 'self' 'unsafe-inline' https://readyplayer.me https://ipnz.readyplayer.me; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com https://readyplayer.me https://ipnz.readyplayer.me; font-src 'self' data: https://fonts.gstatic.com https://fonts.googleapis.com; img-src 'self' data: https:; connect-src https://models.readyplayer.me https://api.readyplayer.me; object-src 'none';" hidden></iframe>
+                            <iframe id="geniesFrame" class="genies-frame" allow="camera *; microphone *; clipboard-write" src="https://avatars.ipnz.live/avatarcreate.php" hidden></iframe>
 
                             <script>
-                                const subdomain = 'ipnz'; // Replace with your custom subdomain
-                                const frame = document.getElementById('frame');
-
-                                frame.src = `https://${subdomain}.readyplayer.me/avatar?frameApi`;
-
-                                window.addEventListener('message', subscribe);
-                                document.addEventListener('message', subscribe);
-
-                                function subscribe(event) {
-                                    const json = parse(event);
-
-                                    if (json?.source !== 'readyplayerme') {
-                                        return;
-                                    }
-
-                                    // Susbribe to all events sent from Ready Player Me once frame is ready
-                                    if (json.eventName === 'v1.frame.ready') {
-                                        frame.contentWindow.postMessage(
-                                            JSON.stringify({
-                                                target: 'readyplayerme',
-                                                type: 'subscribe',
-                                                eventName: 'v1.**'
-                                            }),
-                                            '*'
-                                        );
-                                    }
-
-                                    // Get avatar GLB URL
-                                    if (json.eventName === 'v1.avatar.exported') {
-                                        console.log(`Avatar URL: ${json.data.url}`);
-                                        document.getElementById('avatarUrl').value = `Avatar URL: ${json.data.url}`;
-                                        document.getElementById('frame').hidden = true;
-                                    }
-
-                                    // Get user id
-                                    if (json.eventName === 'v1.user.set') {
-                                        console.log(`User with id ${json.data.id} set: ${JSON.stringify(json)}`);
-                                    }
+                                function toggleGeniesIframe(show) {
+                                    const frame = document.getElementById('geniesFrame');
+                                    if (frame) frame.hidden = !show;
                                 }
 
-                                function parse(event) {
+                                window.addEventListener('message', function (event) {
+                                    const allowedOrigin = 'https://avatars.ipnz.live';
+                                    if (event.origin !== allowedOrigin) return;
                                     try {
-                                        return JSON.parse(event.data);
-                                    } catch (error) {
-                                        return null;
+                                        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                                        if (data && data.type === 'genies.avatar' && data.avatarUrl) {
+                                            const avatarEl = document.getElementById('avatarUrl');
+                                            if (avatarEl) avatarEl.value = data.avatarUrl;
+                                            toggleGeniesIframe(false);
+                                        }
+                                    } catch (e) {
+                                        // ignore malformed messages
                                     }
-                                }
-
-                                function confirmAndDisplayIframe() {
-                                    const message = 'This will open an external avatar creator from ReadyPlayerMe.\n\n' +
-                                        'You can:\n' +
-                                        '• Use your camera (optional) to create an avatar that looks like you\n' +
-                                        '• Upload a photo\n' +
-                                        '• Create from scratch\n\n' +
-                                        'Your avatar URL will be stored securely with us.\n\n' +
-                                        'Continue?';
-                                    
-                                    if (confirm(message)) {
-                                        document.getElementById('frame').hidden = false;
-                                    }
-                                }
-                                
-                                function displayIframe() {
-                                    document.getElementById('frame').hidden = false;
-                                }
+                                });
                             </script>
                             <script>
                                 (function() {
