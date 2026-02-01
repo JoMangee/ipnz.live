@@ -1,79 +1,40 @@
 ---
-# cPanel Deployment Configuration for IPnz.live
-# STAGING/DEV DEPLOYMENT - Development site (auth-dev.ipnz.live → /ipnz-live/www)
-# Rename this file to .cpanel.yml for the staging repository
-
 deployment:
+  id: 'ipnz-avatars-genies'
+  name: 'IPnz Avatars - Genies Integration'
+  branch: rpm-genie
+  repository: 'https://github.com/JoMangee/ipnz.live.git'
+  targetPath: '/home2/ipnz/avatars.ipnz.live/www'
   tasks:
-    # Set deployment path for STAGING
-    - export DEPLOYPATH=/home2/ipnz/ipnz-live/www
-    - echo "========================================="
-    - echo "STAGING DEPLOYMENT to auth-dev.ipnz.live"
-    - echo "========================================="
-    
-    # Deploy www directory contents to staging path
-    - /bin/cp -R www/* $DEPLOYPATH/
-    
-    # Deploy critical root-level configuration files
-    - /bin/cp .htaccess $DEPLOYPATH/.htaccess
-    
-    # Deploy test scripts for staging verification
-    - /bin/cp test_referral_flow.php $DEPLOYPATH/test_referral_flow.php
-    
-    # Create avatars directory if it doesn't exist
-    - mkdir -p $DEPLOYPATH/images/avatars
-    
-    # Preserve existing database config, don't overwrite
-    - |
-      if [ ! -f "$DEPLOYPATH/datacenter/database.config.php" ]; then
-        echo "WARNING: database.config.php not found!"
-        echo "Please create from database.config.example.php"
-        echo "STAGING should use a separate test database!"
+    before_deploy:
+      - mkdir -p /home2/ipnz/avatars.ipnz.live/www
+    after_deploy:
+      - chmod -R 755 /home2/ipnz/avatars.ipnz.live/www
+      - find /home2/ipnz/avatars.ipnz.live/www -type f -name '*.php' -exec chmod 644 {} \;
+      - find /home2/ipnz/avatars.ipnz.live/www -type d -exec chmod 755 {} \;
+  hooks:
+    post_deploy: |
+      #!/bin/bash
+      # Post deployment verification
+      if [ -f /home2/ipnz/avatars.ipnz.live/www/www/join.php ]; then
+        echo "Deployment successful: join.php exists"
       else
-        echo "Preserving existing STAGING database.config.php"
-        /bin/chmod 600 $DEPLOYPATH/datacenter/database.config.php
+        echo "Deployment warning: join.php not found"
       fi
-    
-    # Ensure example file is readable
-    - /bin/chmod 644 $DEPLOYPATH/datacenter/database.config.example.php
-    
-    # Clear PHP opcode cache by touching main files
-    - touch $DEPLOYPATH/index.php
-    - touch $DEPLOYPATH/join.php
-    - touch $DEPLOYPATH/auth.php
-    
-    # Deployment complete
-    - echo "STAGING deployment completed to auth-dev.ipnz.live"
-
-  # Optional: Database Import for Staging (uncomment to enable)
-  # Use this ONLY for initial setup or when resetting staging database
-  database_import:
-    - name: Import SQL Database for Staging
-      description: Upload and import the schema into the staging database (ipnz_live_test)
-      steps:
-        - name: Upload SQL Schema File
-          action: upload
-          source: ipnz_db_improved.sql
-          destination: /home2/ipnz/ipnz-live/ipnz_db_improved.sql
-
-        - name: Create MySQL Staging Database
-          action: execute
-          command: |
-            mysql -u ipnz_live_test -p'${DATABASE_PASSWORD}' -e "CREATE DATABASE IF NOT EXISTS ipnz_live_test;"
-            echo "Staging database 'ipnz_live_test' created or verified"
-
-        - name: Import SQL Schema to Staging
-          action: execute
-          command: |
-            mysql -u ipnz_live_test -p'${DATABASE_PASSWORD}' ipnz_live_test < /home2/ipnz/ipnz-live/ipnz_db_improved.sql
-            echo "Schema imported to staging database"
-
-        - name: Clean Up SQL File
-          action: delete
-          target: /home2/ipnz/ipnz-live/ipnz_db_improved.sql
-          
-        - name: Verify Import
-          action: execute
-          command: |
-            mysql -u ipnz_live_test -p'${DATABASE_PASSWORD}' ipnz_live_test -e "SHOW TABLES;"
-            echo "Database import completed for STAGING environment"
+      if [ -f /home2/ipnz/avatars.ipnz.live/www/www/avatarcreate.php ]; then
+        echo "Deployment successful: avatarcreate.php exists"
+      else
+        echo "Deployment warning: avatarcreate.php not found"
+      fi
+      if [ -f /home2/ipnz/avatars.ipnz.live/www/www/avatarcreate_test.php ]; then
+        echo "Deployment successful: avatarcreate_test.php exists"
+      else
+        echo "Deployment warning: avatarcreate_test.php not found"
+      fi
+  environment_variables:
+    - name: 'GENIES_PUBLIC_API_KEY'
+      prompt: true
+      required: true
+  rollback:
+    enabled: true
+    keep_backups: 3
