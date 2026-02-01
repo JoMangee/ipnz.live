@@ -16,10 +16,11 @@ $geniesApiKey = getenv('GENIES_PUBLIC_API_KEY') ?: '';
         #avatarProfilePic { width: 240px; height: 240px; border-radius: 8px; border: 1px solid #e5e7eb; display: none; }
         #avatarEditorContainer { min-height: 520px; border: 1px dashed #d1d5db; border-radius: 8px; background: #fff; }
         .muted { color: #6b7280; font-size: 12px; }
+        #errorMsg { color: #dc2626; background: #fef2f2; padding: 8px; border-radius: 4px; margin-bottom: 12px; display: none; }
+        #loadingMsg { color: #0d6efd; background: #e7f1ff; padding: 8px; border-radius: 4px; margin-bottom: 12px; display: none; }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://unpkg.com"></script>
+    <script src="/js/vendor/three.r128.min.js"></script>
+    <script src="/js/vendor/GLTFLoader.js"></script>
 </head>
 
 <body data-genies-api-key="<?php echo htmlspecialchars($geniesApiKey, ENT_QUOTES, 'UTF-8'); ?>">
@@ -52,7 +53,7 @@ $geniesApiKey = getenv('GENIES_PUBLIC_API_KEY') ?: '';
 
     <div class="card">
         <label for="glbUrl" class="form-label">Genies .glb URL</label>
-        <input id="glbUrl" class="form-control" type="text" placeholder="Paste Genies .glb model URL">
+        <input id="glbUrl" class="form-control" type="text" placeholder="Paste Genies .glb model URL" value="https://avatars.ipnz.live/mangee-6786f28dd245fa47607251a4.glb">
         <div class="d-flex gap-2" style="margin-top: 8px;">
             <button id="renderBtn" class="btn btn-primary">Render 2D Headshot</button>
             <button id="clearBtn" class="btn btn-outline-secondary">Clear</button>
@@ -61,6 +62,8 @@ $geniesApiKey = getenv('GENIES_PUBLIC_API_KEY') ?: '';
     </div>
 
     <div class="card">
+        <div id="errorMsg"></div>
+        <div id="loadingMsg">Rendering...</div>
         <div class="d-flex gap-4 flex-wrap">
             <div>
                 <div class="muted">Canvas render</div>
@@ -80,6 +83,16 @@ $geniesApiKey = getenv('GENIES_PUBLIC_API_KEY') ?: '';
     <script type="text/javascript">
         let geniesSDK;
         let userEmail;
+
+        function showError(msg) {
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = msg;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMsg').style.display = 'none';
+        }
 
         document.getElementById('geniesLoginBtn').addEventListener('click', async () => {
             const apiKey = document.body.dataset.geniesApiKey;
@@ -126,61 +139,75 @@ $geniesApiKey = getenv('GENIES_PUBLIC_API_KEY') ?: '';
         function renderAvatarTo2D(glbUrl) {
             return new Promise((resolve, reject) => {
                 const canvas = document.getElementById('avatarCanvas');
-                const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
-                renderer.setClearColor(0xffffff);
-                renderer.setSize(240, 240);
+                try {
+                    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+                    renderer.setClearColor(0xffffff);
+                    renderer.setSize(240, 240);
 
-                const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(35, 240 / 240, 0.1, 100);
-                camera.position.set(0, 1.45, 1.8);
-                camera.lookAt(0, 1.4, 0);
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.PerspectiveCamera(35, 240 / 240, 0.1, 100);
+                    camera.position.set(0, 1.45, 1.8);
+                    camera.lookAt(0, 1.4, 0);
 
-                const ambientLight = new THREE.AmbientLight(0x404040, 2.5);
-                scene.add(ambientLight);
-                const mainLight = new THREE.DirectionalLight(0xffffff, 2);
-                mainLight.position.set(1, 2, 3).normalize();
-                scene.add(mainLight);
-                const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
-                backLight.position.set(-1, 2, -2).normalize();
-                scene.add(backLight);
+                    const ambientLight = new THREE.AmbientLight(0x404040, 2.5);
+                    scene.add(ambientLight);
+                    const mainLight = new THREE.DirectionalLight(0xffffff, 2);
+                    mainLight.position.set(1, 2, 3).normalize();
+                    scene.add(mainLight);
+                    const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
+                    backLight.position.set(-1, 2, -2).normalize();
+                    scene.add(backLight);
 
-                const loader = new THREE.GLTFLoader();
-                loader.load(
-                    glbUrl,
-                    (gltf) => {
-                        scene.add(gltf.scene);
-                        renderer.render(scene, camera);
-                        const imageDataUrl = canvas.toDataURL('image/png');
-                        resolve(imageDataUrl);
-                        renderer.dispose();
-                    },
-                    undefined,
-                    (error) => {
-                        console.error('An error occurred loading the GLB model:', error);
-                        reject(error);
-                    }
-                );
+                    const loader = new THREE.GLTFLoader();
+                    loader.load(
+                        glbUrl,
+                        (gltf) => {
+                            console.log('GLB loaded successfully:', gltf);
+                            scene.add(gltf.scene);
+                            renderer.render(scene, camera);
+                            const imageDataUrl = canvas.toDataURL('image/png');
+                            resolve(imageDataUrl);
+                            renderer.dispose();
+                        },
+                        (progress) => {
+                            const loaded = (progress.loaded / progress.total * 100).toFixed(1);
+                            console.log('Loading progress:', loaded + '%');
+                        },
+                        (error) => {
+                            console.error('GLB load error:', error);
+                            reject(new Error('Failed to load GLB: ' + (error.message || error)));
+                        }
+                    );
+                } catch (e) {
+                    console.error('Render error:', e);
+                    reject(e);
+                }
             });
         }
 
         document.getElementById('renderBtn').addEventListener('click', async () => {
             const glbUrl = document.getElementById('glbUrl').value.trim();
             if (!glbUrl) {
-                alert('Please paste a .glb URL first.');
+                showError('Please paste a .glb URL first.');
                 return;
             }
+            hideError();
+            document.getElementById('loadingMsg').style.display = 'block';
             try {
                 const dataUrl = await renderAvatarTo2D(glbUrl);
                 const img = document.getElementById('avatarProfilePic');
                 img.src = dataUrl;
                 img.style.display = 'block';
+                document.getElementById('loadingMsg').style.display = 'none';
             } catch (e) {
-                alert('Failed to render the avatar. Check the console for details.');
+                document.getElementById('loadingMsg').style.display = 'none';
+                showError('Failed to render: ' + (e.message || e));
+                console.error(e);
             }
         });
 
         document.getElementById('clearBtn').addEventListener('click', () => {
-            document.getElementById('glbUrl').value = '';
+            document.getElementById('glbUrl').value = 'https://avatars.ipnz.live/mangee-6786f28dd245fa47607251a4.glb';
             const img = document.getElementById('avatarProfilePic');
             img.src = '';
             img.style.display = 'none';
