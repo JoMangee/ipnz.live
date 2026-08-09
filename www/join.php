@@ -143,7 +143,7 @@
 
                                     <div class="col-lg-6 col-md-6 col-12">
                                         <input type="email" name="join-form-email" id="join-form-email"
-                                            pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email address"
+                                            class="form-control" placeholder="Email address"
                                             value="<?php echo isset($GLOBALS['form_data']['join-form-email']) ? htmlspecialchars($GLOBALS['form_data']['join-form-email']) : ''; ?>"
                                             required>
                                     </div>
