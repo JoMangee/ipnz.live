@@ -20,7 +20,7 @@
     
     # Content Security Policy
     # Allow self-hosted fonts and inline styles (needed for Bootstrap)
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://a.ipnz.live https://connect.facebook.net https://npmcdn.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https: http:; frame-src https://ipnz.readyplayer.me https://a.ipnz.live; connect-src 'self' https://models.readyplayer.me https://a.ipnz.live;"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://a.ipnz.live https://connect.facebook.net; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https: http:; frame-src 'none'; connect-src 'self' https://a.ipnz.live; object-src 'none'; base-uri 'self'; form-action 'self';"
     
     # Remove Server signature
     Header unset Server

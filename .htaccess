@@ -1,7 +1,7 @@
 # Content Security Policy - Enhanced security headers
 <IfModule mod_headers.c>
 # Main CSP: Allow self, inline scripts/styles, and specific external sources
-Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://a.ipnz.live https://connect.facebook.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; font-src 'self' data:; connect-src 'self' https://a.ipnz.live; frame-src 'self' https://www.openstreetmap.org https://www.facebook.com; object-src 'none'; base-uri 'self'; form-action 'self';"
+Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://a.ipnz.live https://connect.facebook.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; font-src 'self' data:; connect-src 'self' https://a.ipnz.live; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self';"
 
 # Legacy CSP headers for older browsers
 Header set X-Content-Security-Policy "font-src 'self' data:;"

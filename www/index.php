@@ -345,14 +345,14 @@ while ($results = $sqlSearch->fetch_assoc()) {
     $colCount++;
     
     // Format the avatar URL
-    $avatarUrl = !empty($results['avatar_url']) ? htmlspecialchars($results['avatar_url']) : 'https://models.readyplayer.me/64bfa15f0e72c63d7c3934a6.png';
+    $avatarUrl = !empty($results['avatar_url']) ? htmlspecialchars($results['avatar_url']) : '';
     $joinDate = date('F j, Y', strtotime($results['created_at']));
     $referralCode = htmlspecialchars($results['referral_code']);
 ?>
                     <div class="col-lg-5 col-12">
                         <div class="avatars-thumb">
                             <div class="avatars-image-wrap">
-                                <img src="<?php echo $avatarUrl; ?>" class="img-fluid avatars-image" style="aspect-ratio: 640 / 427;">
+                                <?php if ($avatarUrl): ?><img src="<?php echo $avatarUrl; ?>" class="img-fluid avatars-image" style="aspect-ratio: 640 / 427;"><?php endif; ?>
                             </div>
 
                             <div class="avatars-hover">
