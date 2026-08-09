@@ -1,0 +1,65 @@
+# IPnz.live LOCAL DEVELOPMENT Configuration
+# Minimal .htaccess for local Docker environment with HTTPS support
+
+# ============================================
+# SECURITY HEADERS
+# ============================================
+
+<IfModule mod_headers.c>
+    # Prevent clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # XSS Protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # NO HTTPS forcing for development - we handle HTTPS via Docker/reverse proxy
+    # NO www forcing for localhost development
+    
+    # ============================================
+    # CLEAN URLs - Remove .php and .html extensions
+    # ============================================
+    
+    # Remove .php or .html from URLs (external redirect)
+    RewriteCond %{THE_REQUEST} /([^.]+)\.(php|html) [NC]
+    RewriteRule ^ /%1 [NC,L,R=301]
+    
+    # ============================================
+    # SPECIFIC PAGE ROUTES
+    # ============================================
+    
+    # Avatar page
+    RewriteRule ^avatar/?$ avatar.php [NC,L]
+    
+    # Join page
+    RewriteRule ^join/?$ join.php [NC,L]
+    
+    # Auth/thank you page
+    RewriteRule ^auth/?$ auth.php [NC,L]
+    
+    # Fallback for extensionless URLs
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.*)$ $1.php [NC,L]
+    
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.html -f
+    RewriteRule ^(.*)$ $1.html [NC,L]
+</IfModule>
+
+# Block access to sensitive files
+<FilesMatch "\.(env|config|sql|git|htaccess)$">
+    Deny from all
+</FilesMatch>
+
+# Allow directory browsing for development
+Options +Indexes

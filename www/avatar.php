@@ -43,7 +43,7 @@
     </p>
 
     <input type="button" value="Open Ready Player Me" onClick="displayIframe()" />
-    <p id="avatarUrl">Avatar URL:</p>
+    <p id="avatarUrl">Avatar URL:</p> <button type="button" class="btn btn-primary"><a href="http://">Use this avatar</a></button>
 
     <iframe id="frame" class="frame" allow="camera *; microphone *; clipboard-write" hidden></iframe>
 
@@ -100,6 +100,20 @@
             document.getElementById('frame').hidden = false;
         }
     </script>
+        <?php
+        // Version marker: short digest over key files for deployment verification
+        $versionMeta = include __DIR__ . '/version_meta.php';
+        $vmFiles = $versionMeta['files'] ?? [];
+        $vmParts = [];
+        foreach ($vmFiles as $vmRel) {
+            $vmPath = __DIR__ . '/' . $vmRel;
+            if (is_file($vmPath)) {
+                $vmParts[] = hash_file('sha256', $vmPath);
+            }
+        }
+        $vmDigest = substr(hash('sha256', implode('', $vmParts)), 0, 12);
+        echo "<!-- version=" . ($versionMeta['version'] ?? 'unknown') . " commit=" . ($versionMeta['commit'] ?? 'unknown') . " digest=" . $vmDigest . " -->";
+        ?>
 </body>
 
 </html>

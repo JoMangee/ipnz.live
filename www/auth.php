@@ -1,151 +1,5 @@
 <?php 
     ini_set("include_path", '/home2/ipnz/php:' . ini_get("include_path") );
-    use PhpDevCommunity\DotEnv;
-    $absolutePathToEnvFile = '/home2/ipnz/ipnz-live/.env'; 
-    (new DotEnv($absolutePathToEnvFile))->load();
-
-    if (getenv('APP_ENV')=="authdev") {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-    }elseif (getenv('APP_ENV')== 'live') {
-        error_reporting(0);
-        ini_set('display_errors', 0);
-    }
-    // authdev
-    // define variables and set to empty values
-    $name = $email = $memtype1 = $memtype2 = $phone = $comment = "";
-    $formpost = array();
-
-    // Database connection details
-    $dbservername = getenv('DATABASE_DNS');
-    $dbusername = getenv('DATABASE_USER');
-    $dbpassword = getenv('DATABASE_PASSWORD');
-    $dbname = getenv('DATABASE_NAME');
-
-    // Create connection
-    $conn = new mysqli($dbservername, $dbusername, $dbpassword, $dbname);
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    // Function to sanitize inputs
-    function sanitize_input($data) {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
-    }
-
-    // Check if form is submitted
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Sanitize input
-        $name = sanitize_input($_POST['name'] ?? '');
-        $email = sanitize_input($_POST['email'] ?? '');
-
-        // Handle file upload
-        $target_dir = "uploads/";
-        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-        $uploadOk = 1;
-        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-
-        // Check if image file is a actual image or fake image
-        if(isset($_POST["submit"])) {
-            $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-            if($check !== false) {
-                $uploadOk = 1;
-            } else {
-                echo "File is not an image.";
-                $uploadOk = 0;
-            }
-        }
-
-        // Check file size
-        if ($_FILES["fileToUpload"]["size"] > 500000) {
-            echo "Sorry, your file is too large.";
-            $uploadOk = 0;
-        }
-
-        // Allow certain file formats
-        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-        && $imageFileType != "gif" ) {
-            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-            $uploadOk = 0;
-        }
-
-        // Check if $uploadOk is set to 0 by an error
-        if ($uploadOk == 0) {
-            echo "Sorry, your file was not uploaded.";
-        // if everything is ok, try to upload file
-        } else {
-            if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
-            } else {
-                echo "Sorry, there was an error uploading your file.";
-            }
-        }
-
-        // SQL to create table if not exists
-        $sql = "CREATE TABLE IF NOT EXISTS members (
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(30) NOT NULL,
-            email VARCHAR(100) NOT NULL,
-            phone VARCHAR(12),
-            memtype VARCHAR(30),
-            status VARCHAR(30),
-            comment TEXT,
-            avatar_id VARCHAR(128),
-            image VARCHAR(255)
-            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        )";
-
-        if ($conn->query($sql) === TRUE) {
-            echo "Table users created successfully or already exists.";
-        } else {
-            echo "Error creating table: " . $conn->error;
-        }
-
-        // Insert data into the table
-        $stmt = $conn->prepare("INSERT INTO members (name, email, phone, memtype, comment) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sss", $name, $email, $target_file);
-
-        if ($stmt->execute()) {
-            echo "New record created successfully";
-        } else {
-            echo "Error: " . $stmt->error;
-        }
-
-        $stmt->close();
-    }
-
-    $conn->close();
-
-
-
-// the original code:
-
- 
-     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // define variables and set to empty values
-        $name = $email = $memtype1 = $memtype2 = $phone = $comment = "";
-        $formpost = array();
-
-         $formpost = $_POST;
-         $name = test_input($_POST["join-form-name"]);
-         $email = test_input($_POST["join-form-email"]);
-         $phone = test_input($_POST["join-form-phone"]);
-         $memtype = test_input($_POST["joinForm"]);
-         $comment = test_input($_POST["join-form-message"]);
-     }
- 
-     function test_input($data) {
-         $data = trim($data);
-         $data = stripslashes($data);
-         $data = htmlspecialchars($data);
-         return $data;
-     }
 ?>
 <!doctype html>
 <html lang="en">
@@ -163,7 +17,7 @@
     <link href="css/google-fonts.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-icons.css" rel="stylesheet">
-    <link href="css/templatemo-festava-live.css" rel="stylesheet">
+    <link href="css/ipnz-live.css" rel="stylesheet">
     <!-- Matomo -->
     <script>
         var _paq = window._paq = window._paq || [];
@@ -189,7 +43,6 @@
 <body>
 
     <main>
-        <!-- <?php print_r($formpost); ?> -->
 
         <header class="site-header">
             <div class="container">
@@ -226,7 +79,7 @@
 
         <nav class="navbar navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="./">
                     IPnz.live
                 </a>
 
@@ -240,19 +93,19 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav align-items-lg-center ms-auto me-lg-5">
                         <li class="nav-item">
-                            <a class="nav-link click-scroll" href="index.html#section_1">Home</a>
+                            <a class="nav-link click-scroll" href="./#section_1">Home</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link click-scroll" href="index.html#section_2">About</a>
+                            <a class="nav-link click-scroll" href="./#section_2">About</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link click-scroll" href="index.html#section_3">Members</a>
+                            <a class="nav-link click-scroll" href="./#section_3">Members</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link click-scroll" href="index.html#section_6">Contact</a>
+                            <a class="nav-link click-scroll" href="./#section_6">Contact</a>
                         </li>
                     </ul>
 
@@ -261,6 +114,7 @@
             </div>
         </nav>
 
+
         <section class="join-section section-padding">
             <div class="section-overlay"></div>
 
@@ -268,58 +122,66 @@
                 <div class="row">
 
                     <div class="col-lg-6 col-10 mx-auto">
-                        <form class="custom-form join-form mb-5 mb-lg-0" action="auth.php?confirm" method="post" role="form">
-                            <h2 class="text-center mb-4">Thanks for requesting to Join us</h2>
+                        <?php
+                        // Handle contact form submission
+                        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['contact']) && $_GET['contact'] === 'true') {
+                            require('datacenter/database.php');
+                            
+                            $name = trim($_POST['contact-name'] ?? '');
+                            $email = trim($_POST['contact-email'] ?? '');
+                            $company = trim($_POST['contact-company'] ?? '');
+                            $message = trim($_POST['contact-message'] ?? '');
+                            
+                            // Validate email
+                            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                echo '<div class="alert alert-danger" style="margin:20px 0;">Invalid email address.</div>';
+                            } else {
+                                // Store contact message (you may want to create a contacts table)
+                                // For now, create a record with status = 1 to distinguish from members
+                                $stmt = $connection->prepare("INSERT INTO ipnz_members (name, email, phone, additional_request, status) VALUES (?, ?, ?, ?, 1)");
+                                $stmt->bind_param("ssss", $name, $email, $company, $message);
+                                
+                                if ($stmt->execute()) {
+                                    echo '<div class="alert alert-success" style="background-color: #4CAF50; color:white; margin:20px 0; text-align:center;">Thank you for your message! We\'ll be in touch soon.</div>';
+                                } else {
+                                    echo '<div class="alert alert-danger" style="margin:20px 0;">Sorry, there was an error. Please try again.</div>';
+                                }
+                                $stmt->close();
+                            }
+                        }
+                        ?>
+                        <form class="custom-form join-form mb-5 mb-lg-0" action="auth.php?contact=true" method="post" role="form">
+                            <h2 class="text-center mb-4">Thank You!</h2>
 
                             <div class="join-form-body">
+                                <p class="text-center mb-4">Your registration was successful! Want to get in touch?</p>
+                                
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-12">
-                                        <input type="text" name="join-form-name" id="join-form-name"
-                                            class="form-control" placeholder="<?php echo $name; ?>" disabled>
+                                        <input type="text" name="contact-name" id="contact-name"
+                                            class="form-control" placeholder="Your name" required>
                                     </div>
 
                                     <div class="col-lg-6 col-md-6 col-12">
-                                        <input type="email" name="join-form-email" id="join-form-email"
-                                             class="form-control" placeholder="<?php echo $email; ?>" disabled>                                 
+                                        <input type="email" name="contact-email" id="contact-email"
+                                            pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email address"
+                                            required>
                                     </div>
                                 </div>
 
-                                <input type="tel" class="form-control" name="join-form-phone"
-                                    placeholder="<?php echo $phone; ?>" disabled>
+                                <input type="text" class="form-control" name="contact-company"
+                                    placeholder="Company or Affiliation">
 
-                                <h6>Choose join Type</h6>
-
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-12">
-                                        <div class="form-check form-control">
-                                            <input class="form-check-input" type="radio" name="joinForm"
-                                                id="flexRadioDefault1" <?php if ($memtype == "Early access"){ echo "checked";} ?> disabled>
-                                            <label class="form-check-label" for="flexRadioDefault1">
-                                                Early access
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 col-md-6 col-12">
-                                        <div class="form-check form-check-radio form-control">
-                                            <input class="form-check-input" type="radio" name="joinForm"
-                                                id="flexRadioDefault2" <?php if ($memtype == "Standard"){ echo "checked";} ?> disabled>
-                                            <label class="form-check-label" for="flexRadioDefault2">
-                                                Standard
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <textarea name="join-form-message" rows="3" class="form-control"
-                                    id="join-form-message" placeholder="<?php echo $comment; ?>" disabled><?php echo $comment; ?></textarea>
+                                <textarea name="contact-message" rows="4" class="form-control"
+                                    id="contact-message" placeholder="Your message to us" required></textarea>
 
                                 <div class="col-lg-4 col-md-10 col-8 mx-auto">
-                                    <button type="submit" class="form-control">Confirm Correct</button>
-                                    <button type="submit" class="form-control">Cancel Join</button>
+                                    <button type="submit" class="form-control">Send Message</button>
                                 </div>
-
-                                <input type="file" name="fileToUpload" id="fileToUpload" ><br>
+                                
+                                <div class="text-center mt-4">
+                                    <a href="./" class="btn btn-outline-light">Return to Home</a>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -340,8 +202,8 @@
                     <div class="col-lg-6 col-12 d-flex justify-content-lg-end align-items-center">
                         <ul class="social-icon d-flex justify-content-lg-end">
                             <li class="social-icon-item">
-                                <a href="#" class="social-icon-link">
-                                    <span class="bi-twitter"></span>
+                                <a href="#" class="social-icon-link" aria-label="X">
+                                    <span class="bi-x"></span>
                                 </a>
                             </li>
 
@@ -477,5 +339,20 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.sticky.js"></script>
     <script src="js/custom.js"></script>
+
+    <?php
+    // Version marker: short digest over key files for deployment verification
+    $versionMeta = include __DIR__ . '/version_meta.php';
+    $vmFiles = $versionMeta['files'] ?? [];
+    $vmParts = [];
+    foreach ($vmFiles as $vmRel) {
+        $vmPath = __DIR__ . '/' . $vmRel;
+        if (is_file($vmPath)) {
+            $vmParts[] = hash_file('sha256', $vmPath);
+        }
+    }
+    $vmDigest = substr(hash('sha256', implode('', $vmParts)), 0, 12);
+    echo "<!-- version=" . ($versionMeta['version'] ?? 'unknown') . " commit=" . ($versionMeta['commit'] ?? 'unknown') . " digest=" . $vmDigest . " -->";
+    ?>
 </body>
 </html>

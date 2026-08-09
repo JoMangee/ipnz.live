@@ -1,0 +1,48 @@
+---
+# cPanel Deployment Configuration for IPnz.live
+# PRODUCTION DEPLOYMENT - Main site (ipnz.live → /public_html)
+# For staging deployment, use .cpanel.staging.yml
+
+deployment:
+  tasks:
+    # Set deployment path for PRODUCTION
+    - export DEPLOYPATH=/home2/ipnz/public_html
+    - echo "========================================="
+    - echo "PRODUCTION DEPLOYMENT to ipnz.live"
+    - echo "========================================="
+    
+    # Deploy www directory contents to public_html
+    - /bin/cp -R www/* $DEPLOYPATH/
+    
+    # Create avatars directory if it doesn't exist
+    - mkdir -p $DEPLOYPATH/images/avatars
+    - /bin/chmod 755 $DEPLOYPATH/images/avatars
+    
+    # Set proper permissions for PHP files (readable, not executable)
+    - find $DEPLOYPATH -type f -name "*.php" -exec /bin/chmod 644 {} \;
+    - find $DEPLOYPATH -type d -exec /bin/chmod 755 {} \;
+    
+    # Preserve existing database config, don't overwrite
+    - |
+      if [ ! -f "$DEPLOYPATH/datacenter/database.config.php" ]; then
+        echo "WARNING: database.config.php not found!"
+        echo "Please create from database.config.example.php"
+      else
+        echo "Preserving existing database.config.php"
+        /bin/chmod 600 $DEPLOYPATH/datacenter/database.config.php
+      fi
+    
+    # Ensure example file is readable
+    - /bin/chmod 644 $DEPLOYPATH/datacenter/database.config.example.php
+    
+    # Clear PHP opcode cache by touching main files
+    - touch $DEPLOYPATH/index.php
+    - touch $DEPLOYPATH/join.php
+    - touch $DEPLOYPATH/auth.php
+    
+    # Log deployment completion
+    - echo "========================================="
+    - echo "PRODUCTION deployment completed!"
+    - echo "Site: https://ipnz.live"
+    - echo "Time: $(date)"
+    - echo "========================================="
