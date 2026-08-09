@@ -1,0 +1,78 @@
+name: E2E Tests
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Playwright deps
+        run: |
+          npm ci
+          npx playwright install --with-deps
+
+      - name: Select compose command
+        run: |
+          if docker compose version >/dev/null 2>&1; then
+            echo "COMPOSE=docker compose" >> $GITHUB_ENV
+          else
+            echo "COMPOSE=docker-compose" >> $GITHUB_ENV
+          fi
+
+      - name: Start Docker Compose
+        run: |
+          $COMPOSE down -v || true
+          $COMPOSE up -d db web
+
+      - name: Wait for db to be ready
+        run: |
+          for i in {1..40}; do
+            if docker exec ipnz-db mysqladmin ping -h 127.0.0.1 -uipnz -pipnz_dev_password --silent 2>/dev/null; then
+              echo "DB ready after $i attempts"
+              exit 0
+            fi
+            echo "Waiting for DB (attempt $i/40)..."
+            sleep 3
+          done
+          echo "DB not ready; logs follow"
+          $COMPOSE logs db || true
+          exit 1
+
+      - name: Wait for web to be ready
+        run: |
+          for i in {1..40}; do
+            if curl -skSf http://localhost:8080 >/dev/null; then exit 0; fi
+            sleep 3
+          done
+          echo "Web server not up" && exit 1
+
+      - name: Seed data
+        run: |
+          docker exec -i ipnz-db mysql -uipnz -pipnz_dev_password ipnz_live < scripts/seed.sql
+
+      - name: Run Playwright tests
+        env:
+          BASE_URL: http://localhost:8080
+        run: |
+          npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report

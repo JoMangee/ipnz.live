@@ -14,14 +14,13 @@ deployment:
     # Deploy www directory contents to staging path
     - /bin/cp -R www/* $DEPLOYPATH/
     
-    # Deploy critical root-level configuration files
-    - /bin/cp .htaccess $DEPLOYPATH/.htaccess
-    
-    # Deploy test scripts for staging verification
-    - /bin/cp test_referral_flow.php $DEPLOYPATH/test_referral_flow.php
-    
     # Create avatars directory if it doesn't exist
     - mkdir -p $DEPLOYPATH/images/avatars
+    - /bin/chmod 755 $DEPLOYPATH/images/avatars
+    
+    # Set proper permissions for PHP files (readable, not executable)
+    - find $DEPLOYPATH -type f -name "*.php" -exec /bin/chmod 644 {} \;
+    - find $DEPLOYPATH -type d -exec /bin/chmod 755 {} \;
     
     # Preserve existing database config, don't overwrite
     - |
@@ -42,8 +41,13 @@ deployment:
     - touch $DEPLOYPATH/join.php
     - touch $DEPLOYPATH/auth.php
     
-    # Deployment complete
-    - echo "STAGING deployment completed to auth-dev.ipnz.live"
+    # Log deployment completion
+    - echo "========================================="
+    - echo "STAGING deployment completed!"
+    - echo "Site: https://auth-dev.ipnz.live"
+    - echo "Time: $(date)"
+    - echo "========================================="
+    - echo "NOTE: Staging uses TEST database - verify config!"
 
   # Optional: Database Import for Staging (uncomment to enable)
   # Use this ONLY for initial setup or when resetting staging database

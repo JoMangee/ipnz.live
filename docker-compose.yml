@@ -1,0 +1,46 @@
+# IPnz Live Docker Configuration (Apache + MariaDB)
+# Port allocation: APACHE_HOST=8080, APACHE_SSL_HOST=8443, MARIADB_HOST=3306 (see ../../../mesh-local/ports.conf)
+# See PORTS_DOCUMENTATION.md for complete port reference
+# version: '3.8'
+
+services:
+  web:
+    image: php:8.2-apache
+    container_name: ipnz-web
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./www:/var/www/html
+      - ./docker/apache-ssl.conf:/etc/apache2/sites-available/default-ssl.conf
+      - ./docker/ssl:/etc/apache2/ssl
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=ipnz_live
+      - DB_USER=ipnz
+      - DB_PASSWORD=ipnz_dev_password
+    command: >
+      bash -c "docker-php-ext-install mysqli
+      && a2enmod rewrite ssl
+      && a2ensite default-ssl
+      && apache2-foreground"
+
+  db:
+    image: mariadb:10.4
+    container_name: ipnz-db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: ipnz_live
+      MYSQL_USER: ipnz
+      MYSQL_PASSWORD: ipnz_dev_password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./ipnz_db_improved.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  db_data:
+

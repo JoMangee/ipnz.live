@@ -1,0 +1,35 @@
+# IPnz.live LOCAL DEVELOPMENT Configuration
+# Minimal .htaccess for local Docker environment
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # ============================================
+    # CLEAN URLs - Remove .php and .html extensions
+    # ============================================
+    
+    # Remove .php or .html from URLs (external redirect)
+    RewriteCond %{THE_REQUEST} /([^.]+)\.(php|html) [NC]
+    RewriteRule ^ /%1 [NC,L,R=301]
+    
+    # Avatar page
+    RewriteRule ^avatar/?$ avatar.php [NC,L]
+    
+    # Join page
+    RewriteRule ^join/?$ join.php [NC,L]
+    
+    # Auth/thank you page
+    RewriteRule ^auth/?$ auth.php [NC,L]
+    
+    # Fallback for extensionless URLs
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.*)$ $1.php [NC,L]
+    
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.html -f
+    RewriteRule ^(.*)$ $1.html [NC,L]
+</IfModule>
+
+# Allow directory browsing for development
+Options +Indexes

@@ -1,11 +1,13 @@
 /*
-
-TemplateMo 583 Festava Live
-
-https://templatemo.com/tm-583-festava-live
-
+  ipnz-live.css
+  Origin: Based on TemplateMo 583 Festava Live (https://templatemo.com/tm-583-festava-live)
+  Refactored and customized for IPnz.live, 2026.
 */
 
+/*
+  This file is a refactored version of TemplateMo 583 Festava Live.
+  All original template code is preserved and adapted for IPnz.live branding and accessibility.
+*/
 
 /*---------------------------------------
   CUSTOM PROPERTIES ( VARIABLES )             
@@ -1029,4 +1031,3 @@ strong {
     font-size: 20px;
   }
 }
-

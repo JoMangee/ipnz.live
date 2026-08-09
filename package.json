@@ -1,0 +1,11 @@
+{
+  "name": "ipnz.live-tests",
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.45.0"
+  },
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed"
+  }
+}
