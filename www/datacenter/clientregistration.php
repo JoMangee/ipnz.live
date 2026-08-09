@@ -100,13 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $avatarUrl = substr($avatarUrl, 12);
             }
             
-            // Handle avatar - use default if not provided (soft fail)
+            // Handle avatar
             $hasCustomAvatar = 0;
-            if (empty($avatarUrl)) {
-                // Use default avatar URL
-                $avatarUrl = 'https://models.readyplayer.me/64bfa15f0e72c63d7c3934a6.png';
-                $hasCustomAvatar = 0;
-            } else {
+            if (!empty($avatarUrl)) {
                 $hasCustomAvatar = 1;
             }
             
